@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+  <!-- Google Analytics 4 -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-L2R09RPPTV"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-L2R09RPPTV');
+  </script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Medical Law Turkey — In Vitro Fertilization (IVF) Malpractice Legal Rights</title>
@@ -63,6 +71,7 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script src="https://js-eu1.hsforms.net/forms/embed/148136939.js" defer></script>
   <meta property="og:site_name" content="Medical Law Turkey">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="apple-touch-icon" href="images/logo.png">
@@ -194,6 +203,42 @@
       </div>
     </div>
   </section>
+
+  <!-- ── PAGE CTA FORM ── -->
+  <section style="padding-top: 0;">
+    <div class="section-inner">
+      <div class="contact-grid">
+        <div class="contact-left">
+          <div class="section-eyebrow">Confidential Case Review</div>
+          <h2 class="specialization-cta-title">Request a Legal Assessment</h2>
+          <p class="specialization-cta-copy">Share the details of your procedure in Turkey. Our team reviews these claims confidentially and responds within business hours.</p>
+        </div>
+
+        <div class="contact-form" id="contactFormCard">
+          <h3 class="specialization-form-heading">Request a Legal Assessment</h3>
+          <p class="specialization-form-copy">All inquiries are confidential and protected by attorney-client privilege.</p>
+          <div class="hs-form-frame" data-region="eu1" data-form-id="af3b6a80-88bb-4620-9e96-5d4d4859b1ac"
+            data-portal-id="148136939"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const pageTitle = document.querySelector("section.hero h1, .spec-page-hero h1, h1");
+      const pageName = pageTitle ? pageTitle.textContent.trim() : "your procedure";
+      const ctaTitle = document.querySelector(".specialization-cta-title");
+      const ctaCopy = document.querySelector(".specialization-cta-copy");
+      const formHeading = document.querySelector(".specialization-form-heading");
+      const formCopy = document.querySelector(".specialization-form-copy");
+
+      if (ctaTitle) ctaTitle.textContent = "Request a Legal Assessment for " + pageName;
+      if (ctaCopy) ctaCopy.textContent = "Share the details of your " + pageName + " experience in Turkey. Our team reviews these claims confidentially and responds within business hours.";
+      if (formHeading) formHeading.textContent = "Start Your " + pageName + " Case Review";
+      if (formCopy) formCopy.textContent = "Use the form below to request a confidential review related to " + pageName + ".";
+    });
+  </script>
 
   <!-- ── FOOTER ── -->
   <footer>
