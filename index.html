@@ -163,7 +163,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  <script src="https://js-eu1.hsforms.net/forms/embed/148136939.js" defer></script>
 </head>
 
 <body>
@@ -442,8 +441,46 @@
           <p>Share your self-assessment with our legal team for a confidential review. Your selected items will be
             included automatically.</p>
           <div class="selected-items-preview" id="selectedItemsPreview"></div>
-          <div class="hs-form-frame" data-region="eu1" data-form-id="af3b6a80-88bb-4620-9e96-5d4d4859b1ac"
-            data-portal-id="148136939"></div>
+          
+          <form class="custom-hs-form" data-type="checklist">
+            <div class="form-row">
+              <div class="form-group">
+                <label>First Name</label>
+                <input type="text" name="firstname" required>
+              </div>
+              <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" name="lastname">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Email *</label>
+              <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label>Phone Number *</label>
+              <div style="display: flex; gap: 0.5rem;">
+                <select style="width: auto; flex-shrink: 0; padding: 0.75rem 0.5rem;" name="phonecode">
+                  <option value="+90">+90</option>
+                  <option value="+44">+44</option>
+                  <option value="+1">+1</option>
+                  <option value="+49">+49</option>
+                  <option value="+33">+33</option>
+                  <option value="+61">+61</option>
+                </select>
+                <input type="tel" name="phone" style="flex: 1;" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Brief Summary of Your Procedure</label>
+              <textarea name="message" rows="3"></textarea>
+            </div>
+            <button type="submit" class="btn-submit">
+              Send Assessment Request
+            </button>
+            <div class="form-msg" style="display:none; text-align:center; margin-top:1rem; font-size:0.85rem; font-weight:600;"></div>
+          </form>
+
           <p class="form-note">Your data is processed in accordance with KVKK/GDPR regulations.</p>
         </div>
       </div>
@@ -790,8 +827,46 @@
         <div class="contact-form" id="contactFormCard">
           <h3>Request a Legal Assessment</h3>
           <p>All inquiries are confidential and protected by attorney-client privilege.</p>
-          <div class="hs-form-frame" data-region="eu1" data-form-id="af3b6a80-88bb-4620-9e96-5d4d4859b1ac"
-            data-portal-id="148136939"></div>
+          
+          <form class="custom-hs-form" data-type="contact">
+            <div class="form-row">
+              <div class="form-group">
+                <label>First Name</label>
+                <input type="text" name="firstname" required>
+              </div>
+              <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" name="lastname">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Email *</label>
+              <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label>Phone Number *</label>
+              <div style="display: flex; gap: 0.5rem;">
+                <select style="width: auto; flex-shrink: 0; padding: 0.75rem 0.5rem;" name="phonecode">
+                  <option value="+90">+90</option>
+                  <option value="+44">+44</option>
+                  <option value="+1">+1</option>
+                  <option value="+49">+49</option>
+                  <option value="+33">+33</option>
+                  <option value="+61">+61</option>
+                </select>
+                <input type="tel" name="phone" style="flex: 1;" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Brief Summary of Your Procedure</label>
+              <textarea name="message" rows="4"></textarea>
+            </div>
+            <button type="submit" class="btn-submit">
+              Send Assessment Request
+            </button>
+            <div class="form-msg" style="display:none; text-align:center; margin-top:1rem; font-size:0.85rem; font-weight:600;"></div>
+          </form>
+
         </div>
       </div>
     </div>
@@ -1055,6 +1130,88 @@
           const offset = 80;
           const top = target.getBoundingClientRect().top + window.pageYOffset - offset;
           window.scrollTo({ top, behavior: 'smooth' });
+        }
+      });
+    });
+
+    // ── WEB3FORMS API FORM SUBMISSION ──
+    document.querySelectorAll('.custom-hs-form').forEach(form => {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const btn = form.querySelector('.btn-submit');
+        const msgBox = form.querySelector('.form-msg');
+        const originalBtnText = btn.innerText;
+        
+        btn.innerText = 'Sending...';
+        btn.disabled = true;
+        msgBox.style.display = 'none';
+
+        const formData = new FormData(form);
+        
+        // --- WEB3FORMS ACCESS KEY ---
+        formData.append("access_key", "0926a3cb-6d91-4e4d-85c6-1302d58548bf");
+        // ----------------------------
+        
+        formData.append("subject", "Yeni İletişim Formu / Legal Assessment");
+        formData.append("from_name", "Medical Law Turkey Website");
+
+        let messageVal = formData.get('message') || '';
+
+        // If this is the checklist form, aggressively append the checked items!
+        if (form.getAttribute('data-type') === 'checklist') {
+          const checkedItems = document.querySelectorAll('.check-box.checked');
+          if (checkedItems.length > 0) {
+            let checklistStr = "\n\n--- Selected Assessment Indicators ---\n";
+            checkedItems.forEach(box => {
+              checklistStr += "- " + box.parentElement.querySelector('.check-text').innerText + "\n";
+            });
+            messageVal += checklistStr;
+          }
+        }
+        
+        // Update message area
+        formData.set("message", messageVal);
+
+        // Combine phone inputs for cleaner web3forms output
+        const phoneVal = formData.get('phonecode') + ' ' + formData.get('phone');
+        formData.set("phone", phoneVal);
+        formData.delete("phonecode");
+
+        try {
+          const response = await fetch("https://api.web3forms.com/submit", {
+            method: 'POST',
+            body: formData
+          });
+          
+          const result = await response.json();
+
+          if (result.success) {
+            form.reset();
+            // Test kutularını da sıfırlayalım ki yeni bir forma yer açılsın
+            if (form.getAttribute('data-type') === 'checklist') {
+              document.querySelectorAll('.check-box.checked').forEach(box => box.classList.remove('checked'));
+              updateChecklistProgress();
+              showModal();
+            } else {
+              msgBox.style.display = 'block';
+              msgBox.style.color = '#0E7490';
+              msgBox.innerText = 'Thank you! Your assessment request has been successfully sent.';
+            }
+          } else {
+            console.error('Web3Forms Error:', result);
+            msgBox.style.display = 'block';
+            msgBox.style.color = '#DC2626';
+            msgBox.innerText = 'An error occurred while submitting: ' + result.message;
+          }
+        } catch (error) {
+          console.error('Submission Error:', error);
+          msgBox.style.display = 'block';
+          msgBox.style.color = '#DC2626';
+          msgBox.innerText = 'Network error. Please try again or contact us via WhatsApp.';
+        } finally {
+          btn.innerText = originalBtnText;
+          btn.disabled = false;
         }
       });
     });
