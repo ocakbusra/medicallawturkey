@@ -163,6 +163,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap"
     rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
+  <script src="https://js-eu1.hsforms.net/forms/embed/148136939.js" defer></script>
 </head>
 
 <body>
@@ -440,38 +441,10 @@
           <h3>Send Your Assessment Results</h3>
           <p>Share your self-assessment with our legal team for a confidential review. Your selected items will be
             included automatically.</p>
-          <form id="checklistEmailForm" onsubmit="submitChecklistForm(event)">
-            <div class="form-group">
-              <label for="clName">Full Name *</label>
-              <input type="text" id="clName" name="name" required placeholder="Your full name">
-            </div>
-            <div class="form-group">
-              <label for="clEmail">Email Address *</label>
-              <input type="email" id="clEmail" name="email" required placeholder="your@email.com">
-            </div>
-            <div class="form-group">
-              <label for="clWhatsapp">WhatsApp Number</label>
-              <input type="text" id="clWhatsapp" name="whatsapp" placeholder="e.g. +44 7XXX XXXXXX">
-            </div>
-            <div class="form-group">
-              <label for="clProcedure">Procedure Type</label>
-              <input type="text" id="clProcedure" name="procedure" placeholder="e.g. Rhinoplasty, BBL, Dental Veneers">
-            </div>
-            <div class="form-group">
-              <label for="clNotes">Additional Notes</label>
-              <textarea id="clNotes" name="notes" placeholder="Any additional details about your situation..."
-                rows="3"></textarea>
-            </div>
-            <div class="selected-items-preview" id="selectedItemsPreview"></div>
-            <button type="submit" class="btn-submit" id="clSubmitBtn">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="22" y1="2" x2="11" y2="13" />
-                <polygon points="22 2 15 22 11 13 2 9 22 2" />
-              </svg>
-              Send Assessment to Legal Team
-            </button>
-            <p class="form-note">Your data is processed in accordance with KVKK/GDPR regulations.</p>
-          </form>
+          <div class="selected-items-preview" id="selectedItemsPreview"></div>
+          <div class="hs-form-frame" data-region="eu1" data-form-id="af3b6a80-88bb-4620-9e96-5d4d4859b1ac"
+            data-portal-id="148136939"></div>
+          <p class="form-note">Your data is processed in accordance with KVKK/GDPR regulations.</p>
         </div>
       </div>
     </div>
@@ -817,48 +790,8 @@
         <div class="contact-form" id="contactFormCard">
           <h3>Request a Legal Assessment</h3>
           <p>All inquiries are confidential and protected by attorney-client privilege.</p>
-
-          <form id="contactForm" onsubmit="submitContactForm(event)">
-            <div class="form-row">
-              <div class="form-group">
-                <label for="contactName">Full Name *</label>
-                <input type="text" id="contactName" name="name" required placeholder="Your full name">
-              </div>
-              <div class="form-group">
-                <label for="contactEmail">Email *</label>
-                <input type="email" id="contactEmail" name="email" required placeholder="your@email.com">
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="contactWhatsapp">WhatsApp Number</label>
-              <input type="text" id="contactWhatsapp" name="whatsapp"
-                placeholder="Include country code, e.g. +44 7XXX...">
-            </div>
-            <div class="form-group">
-              <label for="contactSummary">Brief Summary of Your Procedure</label>
-              <textarea id="contactSummary" name="summary"
-                placeholder="Please briefly describe your procedure, when it was done, and what went wrong..."
-                rows="4"></textarea>
-            </div>
-
-            <label class="form-consent" for="consentCb">
-              <input type="checkbox" id="consentCb" name="consent" required>
-              <div class="consent-mark"></div>
-              <span class="consent-label">I have read the <a href="#" onclick="event.stopPropagation()">Privacy
-                  Policy</a> and give my explicit consent for the processing of my personal and health data in
-                accordance with KVKK/GDPR regulations. <em>(Aydınlatma Metni'ni okudum ve sağlık verilerimin işlenmesine
-                  açık rıza veriyorum.)</em></span>
-            </label>
-
-            <button type="submit" class="btn-submit" id="contactSubmitBtn">
-              Send Assessment Request
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
-                stroke-linecap="square">
-                <path d="M5 12h14" />
-                <path d="M12 5l7 7-7 7" />
-              </svg>
-            </button>
-          </form>
+          <div class="hs-form-frame" data-region="eu1" data-form-id="af3b6a80-88bb-4620-9e96-5d4d4859b1ac"
+            data-portal-id="148136939"></div>
         </div>
       </div>
     </div>
@@ -1056,89 +989,6 @@
       });
       html += '</ul>';
       preview.innerHTML = html;
-    }
-
-    // ── CHECKLIST FORM SUBMISSION ──
-    function submitChecklistForm(e) {
-      e.preventDefault();
-
-      const checkedItems = [];
-      document.querySelectorAll('.check-box.checked').forEach(box => {
-        checkedItems.push(box.parentElement.querySelector('.check-text').innerText);
-      });
-
-      const formData = {
-        name: document.getElementById('clName').value,
-        email: document.getElementById('clEmail').value,
-        whatsapp: document.getElementById('clWhatsapp').value,
-        procedure: document.getElementById('clProcedure').value,
-        notes: document.getElementById('clNotes').value,
-        checklist: checkedItems,
-        source: 'Self-Assessment Checklist',
-        timestamp: new Date().toISOString()
-      };
-
-      // Send via mailto as fallback (works without backend)
-      const mailBody = encodeURIComponent(
-        'NEW SELF-ASSESSMENT SUBMISSION\n' +
-        '================================\n\n' +
-        'Name: ' + formData.name + '\n' +
-        'Email: ' + formData.email + '\n' +
-        'WhatsApp: ' + formData.whatsapp + '\n' +
-        'Procedure: ' + formData.procedure + '\n' +
-        'Notes: ' + formData.notes + '\n\n' +
-        'SELECTED INDICATORS:\n' +
-        formData.checklist.map((item, i) => '  ' + (i + 1) + '. ' + item).join('\n') + '\n\n' +
-        'Submitted: ' + formData.timestamp
-      );
-
-      const mailSubject = encodeURIComponent('Self-Assessment: ' + formData.name + ' — Medical Law Turkey');
-
-      // METHOD 1: Open mailto link
-      window.location.href = 'mailto:info@medicallawturkey.com?subject=' + mailSubject + '&body=' + mailBody;
-
-      // METHOD 2: Also send via WhatsApp as backup
-      const waMessage = encodeURIComponent(
-        '📋 *New Self-Assessment*\n\n' +
-        '*Name:* ' + formData.name + '\n' +
-        '*Email:* ' + formData.email + '\n' +
-        '*WhatsApp:* ' + formData.whatsapp + '\n' +
-        '*Procedure:* ' + formData.procedure + '\n\n' +
-        '*Selected Indicators:*\n' +
-        formData.checklist.map((item, i) => (i + 1) + '. ' + item).join('\n')
-      );
-
-      // Show success and also provide WhatsApp link
-      showModal('checklistSuccess');
-    }
-
-    // ── CONTACT FORM SUBMISSION ──
-    function submitContactForm(e) {
-      e.preventDefault();
-
-      const formData = {
-        name: document.getElementById('contactName').value,
-        email: document.getElementById('contactEmail').value,
-        whatsapp: document.getElementById('contactWhatsapp').value,
-        summary: document.getElementById('contactSummary').value,
-        source: 'Contact Form',
-        timestamp: new Date().toISOString()
-      };
-
-      const mailBody = encodeURIComponent(
-        'NEW ASSESSMENT REQUEST\n' +
-        '================================\n\n' +
-        'Name: ' + formData.name + '\n' +
-        'Email: ' + formData.email + '\n' +
-        'WhatsApp: ' + formData.whatsapp + '\n\n' +
-        'CASE SUMMARY:\n' + formData.summary + '\n\n' +
-        'Submitted: ' + formData.timestamp
-      );
-
-      const mailSubject = encodeURIComponent('Assessment Request: ' + formData.name + ' — Medical Law Turkey');
-      window.location.href = 'mailto:info@medicallawturkey.com?subject=' + mailSubject + '&body=' + mailBody;
-
-      showModal();
     }
 
     // ── FAQ ACCORDION ──
