@@ -1,6 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- Microsoft Clarity -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "w3ub3di1um");
+    </script>
+
   <!-- Google Analytics 4 -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-L2R09RPPTV"></script>
   <script>
@@ -71,7 +80,7 @@
 
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-  <script src="https://js-eu1.hsforms.net/forms/embed/148136939.js" defer></script>
+  <script src="specialization-form.js" defer></script>
   <meta property="og:site_name" content="Medical Law Turkey">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="apple-touch-icon" href="images/logo.png">
@@ -217,28 +226,48 @@
         <div class="contact-form" id="contactFormCard">
           <h3 class="specialization-form-heading">Request a Legal Assessment</h3>
           <p class="specialization-form-copy">All inquiries are confidential and protected by attorney-client privilege.</p>
-          <div class="hs-form-frame" data-region="eu1" data-form-id="af3b6a80-88bb-4620-9e96-5d4d4859b1ac"
-            data-portal-id="148136939"></div>
+          <form class="custom-contact-form" data-type="contact">
+            <input type="hidden" name="procedure" value="Birth Injury Malpractice">
+            <div class="form-row">
+              <div class="form-group">
+                <label>First Name</label>
+                <input type="text" name="firstname" required>
+              </div>
+              <div class="form-group">
+                <label>Last Name</label>
+                <input type="text" name="lastname">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Email *</label>
+              <input type="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label>Phone Number *</label>
+              <div style="display: flex; gap: 0.5rem;">
+                <select style="width: auto; flex-shrink: 0; padding: 0.75rem 0.5rem;" name="phonecode">
+                  <option value="+90">+90</option>
+                  <option value="+44">+44</option>
+                  <option value="+1">+1</option>
+                  <option value="+49">+49</option>
+                  <option value="+33">+33</option>
+                  <option value="+61">+61</option>
+                </select>
+                <input type="tel" name="phone" style="flex: 1;" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Brief Summary of Your Case</label>
+              <textarea name="message" rows="4"></textarea>
+            </div>
+            <button type="submit" class="btn-submit specialization-submit-btn">Request Case Review</button>
+            <div class="form-msg" style="display:none; text-align:center; margin-top:1rem; font-size:0.85rem; font-weight:600;"></div>
+          </form>
         </div>
       </div>
     </div>
   </section>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      const pageTitle = document.querySelector("section.hero h1, .spec-page-hero h1, h1");
-      const pageName = pageTitle ? pageTitle.textContent.trim() : "your procedure";
-      const ctaTitle = document.querySelector(".specialization-cta-title");
-      const ctaCopy = document.querySelector(".specialization-cta-copy");
-      const formHeading = document.querySelector(".specialization-form-heading");
-      const formCopy = document.querySelector(".specialization-form-copy");
-
-      if (ctaTitle) ctaTitle.textContent = "Request a Legal Assessment for " + pageName;
-      if (ctaCopy) ctaCopy.textContent = "Share the details of your " + pageName + " experience in Turkey. Our team reviews these claims confidentially and responds within business hours.";
-      if (formHeading) formHeading.textContent = "Start Your " + pageName + " Case Review";
-      if (formCopy) formCopy.textContent = "Use the form below to request a confidential review related to " + pageName + ".";
-    });
-  </script>
 
   <!-- ── FOOTER ── -->
   <footer>
