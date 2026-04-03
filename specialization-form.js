@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", function () {
     ctaCopy.textContent =
       "Share the details of your " +
       pageName +
-      " experience in Turkey. Our team reviews these claims confidentially and responds within business hours.";
+      " experience in Türkiye. Our team reviews these claims confidentially and responds within business hours.";
   }
   if (formHeading) formHeading.textContent = "Start Your " + pageName + " Case Review";
   if (formCopy) {
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", function () {
       const formData = new FormData(form);
       formData.append("access_key", "0926a3cb-6d91-4e4d-85c6-1302d58548bf");
       formData.append("subject", "Assessment Request - " + pageName);
-      formData.append("from_name", "Medical Law Turkey Website");
+      formData.append("from_name", "Medical Law Türkiye Website");
 
       const phoneVal = (formData.get("phonecode") || "") + " " + (formData.get("phone") || "");
       formData.set("phone", phoneVal.trim());
