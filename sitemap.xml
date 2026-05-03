@@ -197,6 +197,20 @@
     <priority>0.7</priority>
   </url>
 
+  <!-- Makaleler -->
+  <url>
+    <loc>https://www.medicallawturkey.com/medical-malpractice-and-compensation-liability-in-turkey.html</loc>
+    <lastmod>2026-05-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://www.medicallawturkey.com/patient-rights-and-informed-consent-in-turkey.html</loc>
+    <lastmod>2026-05-03</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
   <!-- Yasal / Politika Sayfaları -->
   <url>
     <loc>https://www.medicallawturkey.com/privacy-policy.html</loc>
