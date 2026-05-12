@@ -20,7 +20,7 @@
   <!-- Vaka Çalışmaları -->
   <url>
     <loc>https://www.medicallawturkey.com/casestudies.html</loc>
-    <lastmod>2026-03-30</lastmod>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.9</priority>
   </url>
@@ -193,6 +193,24 @@
   <url>
     <loc>https://www.medicallawturkey.com/liposuction-arm-lift-case-study.html</loc>
     <lastmod>2026-03-30</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.medicallawturkey.com/rhinoplasty-multiple-revision-conflict-case-study.html</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.medicallawturkey.com/septorhinoplasty-infraorbital-fracture-case-study.html</loc>
+    <lastmod>2026-05-12</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://www.medicallawturkey.com/hair-dye-consumer-jurisdiction-case-study.html</loc>
+    <lastmod>2026-05-12</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
