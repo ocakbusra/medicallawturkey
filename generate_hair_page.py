@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+import json
+
+# 1. Metadata and JSON-LD
+HEAD_START = """<!DOCTYPE html>
 <html lang="en">
 <head>
   <!-- Microsoft Clarity -->
@@ -54,486 +57,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
-<!-- Page-specific styles for article layout -->
-  <style>
-    /* ── ALP: Article Layout & Typography ── */
-    .alp-article {
-      background: var(--white);
-      padding: 3rem;
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow-sm);
-      border-radius: var(--radius-md);
-    }
-    @media (max-width: 640px) {
-      .alp-article { padding: 1.5rem; }
-    }
-    .alp-body {
-      color: var(--text-secondary);
-      line-height: 1.85;
-      font-size: 1.02rem;
-      margin-bottom: 1.5rem;
-    }
-    .alp-section-title {
-      font-size: 1.65rem;
-      color: var(--navy);
-      margin-top: 3rem;
-      margin-bottom: 1.25rem;
-      line-height: 1.3;
-      font-weight: 700;
-      letter-spacing: -0.01em;
-    }
+"""
 
-    /* ── TABLE OF CONTENTS ── */
-    .alp-toc {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 1.5rem 2rem;
-      margin-bottom: 2rem;
-      box-shadow: var(--shadow-xs);
-    }
-    .alp-toc-label {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      font-weight: 700;
-      color: var(--navy);
-      font-size: 0.92rem;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin-bottom: 1rem;
-    }
-    .alp-toc-list {
-      list-style: none;
-      counter-reset: toc-counter;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 0.5rem 2rem;
-    }
-    @media (max-width: 640px) {
-      .alp-toc-list { grid-template-columns: 1fr; }
-    }
-    .alp-toc-list li {
-      counter-increment: toc-counter;
-    }
-    .alp-toc-list li a {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--text-secondary);
-      font-size: 0.88rem;
-      font-weight: 500;
-      padding: 0.4rem 0;
-      transition: color var(--transition);
-      text-decoration: none;
-    }
-    .alp-toc-list li a::before {
-      content: counter(toc-counter, decimal-leading-zero);
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--teal);
-      min-width: 1.5rem;
-    }
-    .alp-toc-list li a:hover {
-      color: var(--teal);
-    }
-
-    /* ── KEY TAKEAWAYS ── */
-    .alp-takeaways {
-      background: linear-gradient(135deg, #F0FDFA 0%, #ECFDF5 100%);
-      border: 1px solid rgba(14, 116, 144, 0.15);
-      border-radius: var(--radius-md);
-      padding: 2rem;
-      margin-bottom: 2.5rem;
-    }
-    .alp-takeaways-header {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-      margin-bottom: 1.25rem;
-    }
-    .alp-takeaways-header h3 {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--navy);
-      margin: 0;
-    }
-    .alp-takeaway-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-    .alp-takeaway-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.65rem;
-    }
-    .alp-check {
-      width: 20px;
-      height: 20px;
-      min-width: 20px;
-      margin-top: 2px;
-    }
-    .alp-takeaway-list li span {
-      color: var(--text-secondary);
-      font-size: 0.93rem;
-      line-height: 1.6;
-    }
-
-    /* ── HIGHLIGHT / DEFINITION BOX ── */
-    .alp-highlight-box {
-      background: var(--gray-50);
-      border-left: 4px solid var(--navy);
-      border-radius: 0 var(--radius-md) var(--radius-md) 0;
-      padding: 2rem;
-      margin: 2.5rem 0;
-      position: relative;
-    }
-    .alp-highlight-icon {
-      position: absolute;
-      top: -14px;
-      left: 20px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .alp-highlight-title {
-      font-size: 1.3rem;
-      color: var(--navy);
-      margin: 0.5rem 0 1rem 0;
-      font-weight: 700;
-    }
-
-    /* ── COMPLICATION CARDS ── */
-    .alp-complication-grid {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin: 1.5rem 0 2rem 0;
-    }
-    .alp-complication-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 1.75rem;
-      position: relative;
-      transition: box-shadow var(--transition), border-color var(--transition);
-    }
-    .alp-complication-card:hover {
-      box-shadow: var(--shadow-md);
-      border-color: var(--border-teal);
-    }
-    .alp-complication-num {
-      font-size: 2rem;
-      font-weight: 800;
-      color: rgba(14, 116, 144, 0.12);
-      line-height: 1;
-      margin-bottom: 0.5rem;
-      letter-spacing: -0.02em;
-    }
-    .alp-complication-title {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 0.75rem;
-    }
-
-    /* ── INLINE CTA ── */
-    .alp-inline-cta {
-      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%);
-      border-radius: var(--radius-lg);
-      padding: 2rem 2.5rem;
-      margin: 3rem 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 2rem;
-      flex-wrap: wrap;
-    }
-    .alp-inline-cta-text h4 {
-      color: #fff;
-      font-size: 1.15rem;
-      font-weight: 700;
-      margin-bottom: 0.35rem;
-    }
-    .alp-inline-cta-text p {
-      color: rgba(255,255,255,0.75);
-      font-size: 0.88rem;
-      margin: 0;
-    }
-    .alp-inline-cta-btn {
-      background: var(--teal);
-      color: #fff;
-      padding: 0.75rem 1.75rem;
-      border-radius: var(--radius-sm);
-      font-weight: 600;
-      font-size: 0.88rem;
-      text-decoration: none;
-      white-space: nowrap;
-      transition: background var(--transition), transform var(--transition);
-    }
-    .alp-inline-cta-btn:hover {
-      background: var(--teal-dark);
-      transform: translateY(-1px);
-    }
-
-    /* ── LEGAL DOCTRINE CARDS ── */
-    .alp-legal-cards {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin: 1.5rem 0 2rem 0;
-    }
-    .alp-legal-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius-md);
-      padding: 1.75rem;
-      transition: box-shadow var(--transition);
-    }
-    .alp-legal-card:hover {
-      box-shadow: var(--shadow-md);
-    }
-    .alp-legal-card-header {
-      display: flex;
-      align-items: center;
-      gap: 0.65rem;
-      margin-bottom: 1rem;
-    }
-    .alp-legal-card-header h4 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--navy);
-      margin: 0;
-    }
-
-    /* ── ICON LIST ── */
-    .alp-icon-list {
-      list-style: none;
-      padding: 0;
-      margin: 0 0 1.5rem 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-    }
-    .alp-icon-list-compact { gap: 0.6rem; }
-    .alp-icon-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.65rem;
-    }
-    .alp-icon-list li span {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-      line-height: 1.7;
-    }
-
-    /* ── QUOTE BLOCK ── */
-    .alp-quote {
-      border-left: 4px solid var(--teal);
-      background: var(--teal-bg);
-      padding: 1.75rem 2rem;
-      margin: 2rem 0;
-      border-radius: 0 var(--radius-md) var(--radius-md) 0;
-    }
-    .alp-quote p {
-      color: var(--navy);
-      font-size: 1.05rem;
-      font-weight: 500;
-      line-height: 1.7;
-      margin: 0;
-      font-style: italic;
-    }
-
-    /* ── TIMELINE ── */
-    .alp-timeline {
-      position: relative;
-      padding-left: 3rem;
-      margin: 1.5rem 0 2.5rem 0;
-    }
-    .alp-timeline::before {
-      content: '';
-      position: absolute;
-      left: 15px;
-      top: 0;
-      bottom: 0;
-      width: 2px;
-      background: linear-gradient(180deg, var(--teal), var(--border));
-      border-radius: 1px;
-    }
-    .alp-timeline-item {
-      position: relative;
-      padding-bottom: 2rem;
-    }
-    .alp-timeline-item:last-child {
-      padding-bottom: 0;
-    }
-    .alp-timeline-marker {
-      position: absolute;
-      left: -3rem;
-      top: 0;
-      width: 32px;
-      height: 32px;
-      background: var(--teal);
-      color: #fff;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 0.82rem;
-      z-index: 1;
-      box-shadow: 0 0 0 4px var(--off-white);
-    }
-    .alp-timeline-content h4 {
-      font-size: 1.05rem;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 0.5rem;
-    }
-    .alp-timeline-content p {
-      color: var(--text-secondary);
-      font-size: 0.93rem;
-      line-height: 1.75;
-      margin: 0;
-    }
-
-    /* ── COMPENSATION GRID ── */
-    .alp-compensation-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1rem;
-      margin: 1.5rem 0;
-    }
-    .alp-compensation-card {
-      border-radius: var(--radius-md);
-      padding: 2rem;
-    }
-    .alp-compensation-card h4 {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: var(--navy);
-      margin-bottom: 1rem;
-    }
-    .alp-compensation-material {
-      background: var(--gray-50);
-      border: 1px solid var(--border);
-    }
-    .alp-compensation-moral {
-      background: linear-gradient(135deg, #F0FDFA 0%, #F0F9FF 100%);
-      border: 1px solid rgba(14, 116, 144, 0.12);
-    }
-
-    /* ── WARNING BOX ── */
-    .alp-warning-box {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.85rem;
-      background: #FFFBEB;
-      border: 1px solid #FDE68A;
-      border-radius: var(--radius-md);
-      padding: 1.25rem 1.5rem;
-      margin-bottom: 1.5rem;
-      font-size: 0.93rem;
-      color: #92400E;
-      line-height: 1.6;
-    }
-    .alp-warning-box svg { flex-shrink: 0; margin-top: 2px; }
-
-    /* ── END CTA ── */
-    .alp-end-cta {
-      background: linear-gradient(135deg, var(--navy) 0%, #1E3A5F 100%);
-      border-radius: var(--radius-lg);
-      padding: 2.5rem;
-      margin-top: 3rem;
-      text-align: center;
-    }
-    .alp-end-cta h3 {
-      color: #fff;
-      font-size: 1.4rem;
-      font-weight: 700;
-      margin-bottom: 0.75rem;
-    }
-    .alp-end-cta p {
-      color: rgba(255,255,255,0.75);
-      font-size: 0.93rem;
-      max-width: 540px;
-      margin: 0 auto 1.5rem auto;
-      line-height: 1.6;
-    }
-    .alp-end-cta-actions {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-    .alp-end-cta-btn {
-      background: var(--teal);
-      color: #fff;
-      padding: 0.85rem 2rem;
-      border-radius: var(--radius-sm);
-      font-weight: 600;
-      font-size: 0.93rem;
-      text-decoration: none;
-      transition: background var(--transition), transform var(--transition);
-    }
-    .alp-end-cta-btn:hover {
-      background: var(--teal-dark);
-      transform: translateY(-1px);
-    }
-    .alp-end-cta-btn-secondary {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: transparent;
-      color: rgba(255,255,255,0.85);
-      padding: 0.85rem 1.75rem;
-      border: 1px solid rgba(255,255,255,0.25);
-      border-radius: var(--radius-sm);
-      font-weight: 600;
-      font-size: 0.93rem;
-      text-decoration: none;
-      transition: all var(--transition);
-    }
-    .alp-end-cta-btn-secondary:hover {
-      background: rgba(255,255,255,0.1);
-      border-color: rgba(255,255,255,0.45);
-    }
-
-    /* ── DISCLAIMER ── */
-    .alp-disclaimer {
-      background: var(--gray-50);
-      border-left: 3px solid var(--border);
-      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-      padding: 1.25rem 1.5rem;
-      margin-top: 2.5rem;
-    }
-    .alp-disclaimer h4 {
-      font-size: 0.88rem;
-      font-weight: 600;
-      color: var(--text-muted);
-      margin-bottom: 0.35rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-    }
-    .alp-disclaimer p {
-      color: var(--text-muted);
-      font-size: 0.82rem;
-      line-height: 1.6;
-      margin: 0;
-    }
-  </style>
+JSON_LD = """
   <!-- Structured Data: Article -->
   <script type="application/ld+json">
   {
@@ -605,7 +131,126 @@
     }
   }
   </script>
+"""
 
+with open('bbl-malpractice.html', 'r') as f:
+    bbl_html = f.read()
+
+# Extract the CSS block from BBL page
+css_start = bbl_html.find('<!-- Page-specific styles for article layout -->')
+css_end = bbl_html.find('</style>', css_start) + 8
+CSS_BLOCK = bbl_html[css_start:css_end]
+
+# FAQ Data
+faqs = [
+    (
+        "What qualifies as hair transplant malpractice under Turkish law?",
+        "Hair transplant malpractice occurs when a clinic or provider in Türkiye fails to meet the accepted standard of care during the procedure (FUE, DHI, or FUT) and this failure causes significant deviation from the agreed aesthetic result or physical harm. Because hair transplants are elective procedures aimed at a specific result, Turkish courts often view them as a \"Contract for Work\" (Eser Sözleşmesi). Malpractice includes overharvesting the donor area, unnatural hairline design, severe infection due to unsterile conditions, delegating the entire surgery to unlicensed technicians without surgeon supervision, or obtaining invalid informed consent."
+    ),
+    (
+        "Can I sue a Turkish hair clinic from the UK, US, or EU without flying back?",
+        "Yes, you can. Your nationality and residence abroad do not strip you of your legal rights under Turkish consumer and tort law. The lawsuit is filed in the Turkish courts—usually in the city where the surgery took place, such as Istanbul or Antalya. Our specialized legal team represents international patients daily, managing the entire pre-action strategy, mediation, and litigation process on your behalf so you do not have to travel back and forth to Türkiye."
+    ),
+    (
+        "Do I need to attend court hearings in Türkiye?",
+        "No, your physical presence in Türkiye is not required. By visiting your local Turkish consulate or embassy and granting our law firm a specific Power of Attorney (Vekaletname), you authorize us to act as your legal representatives. We will attend all mandatory mediation sessions, file court documents, manage interactions with forensic experts, and represent you at all judicial hearings while you remain at home."
+    ),
+    (
+        "What compensation can I claim after a botched hair transplant?",
+        "You can claim both pecuniary (material) damages and non-pecuniary (moral) damages. Material damages may cover the refund of the original surgery package, travel costs, lost wages, and importantly, the cost of having a corrective/revision hair transplant performed by a specialist in your home country. Moral damages are awarded to compensate for the emotional distress, loss of self-esteem, social anxiety, and psychological trauma caused by a botched appearance or permanent donor depletion."
+    ),
+    (
+        "How long do I have to file a malpractice lawsuit (statute of limitations)?",
+        "In Türkiye, because an aesthetic hair transplant is governed by the \"Contract for Work\" framework, the standard statute of limitations is five (5) years from the date of the surgery. If the injury was caused by gross negligence or intentional fraud—such as an unlicensed person operating under the guise of being a doctor—the period can extend to twenty (20) years. However, you must act promptly, as evidence such as WhatsApp chats, medical records, and clinic operations can disappear quickly."
+    ),
+    (
+        "My donor area was overharvested and looks 'moth-eaten.' Can this support a claim?",
+        "Yes, absolutely. The donor area (typically the back and sides of the head) contains a finite number of hair follicles. A competent surgeon must calculate extraction limits safely. Overharvesting depletes this permanent resource, leaving the area looking patchy, scarred, or 'moth-eaten,' while also destroying your ability to have future corrective transplants. This is a severe deviation from the standard of care and forms a very strong basis for a medical malpractice and breach of contract claim."
+    ),
+    (
+        "I have an unnatural hairline and wrong graft angles. Is this malpractice or just an aesthetic preference?",
+        "While minor aesthetic dissatisfaction is subjective, an objectively unnatural hairline—such as a perfectly straight \"pluggy\" line, grafts placed pointing in the wrong direction, or implantation too low on the forehead—is a clear failure to meet professional medical standards. Turkish forensic experts evaluate whether the result aligns with standard medical practice. Under the Contract for Work doctrine, failing to deliver a reasonably natural aesthetic result as promised constitutes a breach of duty."
+    ),
+    (
+        "The clinic promised 4,000+ grafts but the result looks sparse. Can I claim graft count fraud?",
+        "Yes. Inflating graft numbers is a common tactic used by unethical \"hair mills\" to justify package prices. If a clinic promised to extract and implant 4,000 grafts but only performed 2,000, or if they extracted 4,000 but failed to implant them properly (resulting in massive graft death/wastage), this is both a breach of contract and potential fraud. Independent medical experts can assess the density and survival rate to prove that the promised work was not delivered."
+    ),
+    (
+        "A technician performed my entire surgery, not the advertised doctor. What is their liability?",
+        "Under Turkish Ministry of Health regulations, surgical procedures must be performed by or under the direct, active supervision of a licensed medical doctor. If your entire extraction and implantation were performed solely by unlicensed technicians or nurses while the doctor was absent, this constitutes gross negligence and a severe violation of medical law. Both the clinic and the technicians are strictly liable for the resulting harm, and this greatly strengthens your claim for maximum compensation."
+    ),
+    (
+        "The clinic only gave me a consent form in Turkish right before the procedure. Is this legal?",
+        "No, this is highly illegal and a major violation of patient rights in Türkiye. Informed consent must be given in a language you fully understand, well in advance of the surgery, and it must explicitly detail the risks (e.g., shock loss, necrosis, survival rates). Forcing you to sign Turkish documents moments before local anesthesia renders the consent legally void. This makes the clinic strictly liable for any complications, as the intervention was performed without lawful permission."
+    ),
+    (
+        "What evidence do I need to prove my hair transplant malpractice case?",
+        "Critical evidence includes your pre-operative and post-operative photographs (showing the progression of the bad result), all WhatsApp communications with the clinic or agency (especially promises regarding graft counts and doctor involvement), payment receipts, the consent forms you signed, and your medical file. We also highly recommend obtaining a medical report from a hair transplant specialist in your home country documenting the poor density, incorrect angles, or donor depletion."
+    ),
+    (
+        "The clinic has blocked me on WhatsApp and refuses to provide my medical records. What should I do?",
+        "This is a common tactic used by rogue clinics to avoid accountability. Under Turkish health regulations, the clinic is legally mandated to provide your complete medical file upon request. As your legal representatives, we will issue a formal, legally binding demand for your records via a Notary Public. If they continue to refuse, we will petition the Turkish courts and the Ministry of Health to forcefully seize the documents."
+    ),
+    (
+        "How do Turkish courts and forensic experts evaluate hair transplant negligence?",
+        "Judges in Türkiye are legal experts, not doctors, so they refer medical malpractice cases to an official medical board—usually the Turkish Forensic Medicine Institute (Adli Tıp Kurumu) or a panel of university plastic surgery or dermatology professors. This panel reviews your photos, medical records, and expert opinions to determine if the clinic's actions fell below the accepted standard of care and caused your specific injuries."
+    ),
+    (
+        "How long do malpractice lawsuits typically take in Türkiye?",
+        "A fully litigated malpractice case in a Turkish Consumer Court generally takes between 1.5 to 3 years to reach a final verdict, primarily due to the time required to obtain official forensic medical reports. However, many cases are resolved much faster—often within a few months—during the mandatory mediation phase, where clinics and their insurers agree to a private financial settlement to avoid a lengthy public trial."
+    ),
+    (
+        "The clinic is offering me a free repair session to fix the botched transplant. Should I accept?",
+        "We strongly advise extreme caution. If a clinic lacked the competence to perform the initial transplant correctly, trusting them with a highly complex revision surgery—especially when your donor area is already compromised—is incredibly risky. Furthermore, accepting their offer or signing a \"release document\" in exchange for the free surgery will likely waive your legal right to sue them for financial compensation later."
+    ),
+    (
+        "I developed a severe infection or necrosis after my transplant. Is the clinic responsible?",
+        "Yes. While minor localized infections can occasionally occur, severe infections, rampant cysts, or tissue death (necrosis) in the donor or recipient areas usually indicate unsanitary operating conditions, unsterile instruments, or dangerously poor surgical technique (such as injecting too much adrenaline with local anesthesia, which chokes off blood supply). The clinic is strictly liable for the catastrophic damage and the subsequent medical treatments you require."
+    ),
+    (
+        "Do I need to translate my foreign medical records into Turkish?",
+        "Yes. For documents, medical reports, and invoices from your home country to be legally admissible in a Turkish court, they must be translated into Turkish by a certified sworn translator and officially notarized. Our law firm handles this entire translation and notarization process for you, ensuring that all your foreign evidence is submitted correctly according to Turkish procedural law."
+    ),
+    (
+        "Can I claim the cost of having my revision/repair transplant done in my home country?",
+        "Yes, this is a central component of a strong compensation claim. Turkish courts recognize that a patient severely traumatized by a negligent Turkish clinic cannot be expected to return to that same country for corrective surgery. You are legally entitled to claim the estimated financial cost of having the revision procedure performed by a qualified specialist in your home country (e.g., the UK or US), which significantly increases the value of your material damages."
+    ),
+    (
+        "What is mandatory mediation (arabuluculuk) in Turkish consumer law?",
+        "Before a medical malpractice lawsuit can proceed in a Consumer Court, Turkish law mandates a mediation phase (Arabuluculuk). An impartial mediator facilitates a meeting between our legal team and the clinic's representatives or insurers. This is a strategic opportunity for us to present your overwhelming evidence and negotiate a rapid financial settlement. If an agreement is reached, the case closes swiftly; if not, we immediately file the lawsuit."
+    ),
+    (
+        "How do I start the legal process with Medical Law Türkiye?",
+        "The first step is to contact us via our secure contact form, WhatsApp (+90 531 933 63 16), or email. We will ask you for a brief summary of your hair transplant, the complications you are facing, and your before-and-after photographs. Our expert attorneys will conduct a free, strictly confidential initial assessment of your case. If we take your case, we will guide you step-by-step on how to issue a Power of Attorney so we can begin fighting for your rights."
+    )
+]
+
+# Generate FAQ JSON-LD
+faq_schema = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": []
+}
+
+for q, a in faqs:
+    faq_schema["mainEntity"].append({
+        "@type": "Question",
+        "name": q,
+        "acceptedAnswer": {
+            "@type": "Answer",
+            "text": a
+        }
+    })
+
+FAQ_JSON_LD = f'''
+  <!-- Structured Data: FAQ -->
+  <script type="application/ld+json">
+  {json.dumps(faq_schema, indent=2)}
+  </script>
+</head>
+'''
+
+BODY_START = """
 <body class="page-specialization">
   <!-- ── HEADER / NAV ── -->
   <header class="site-header">
@@ -1039,10 +684,14 @@
       </p>
 
       <div class="faq-container">
+"""
 
+FAQ_HTML = ""
+for i, (q, a) in enumerate(faqs, 1):
+    FAQ_HTML += f'''
         <div class="faq-item">
           <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">1. What qualifies as hair transplant malpractice under Turkish law?</h4>
+            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">{i}. {q}</h4>
             <span class="faq-icon">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="12" y1="5" x2="12" y2="19" />
@@ -1051,295 +700,12 @@
             </span>
           </div>
           <div class="faq-a">
-            <p>Hair transplant malpractice occurs when a clinic or provider in Türkiye fails to meet the accepted standard of care during the procedure (FUE, DHI, or FUT) and this failure causes significant deviation from the agreed aesthetic result or physical harm. Because hair transplants are elective procedures aimed at a specific result, Turkish courts often view them as a "Contract for Work" (Eser Sözleşmesi). Malpractice includes overharvesting the donor area, unnatural hairline design, severe infection due to unsterile conditions, delegating the entire surgery to unlicensed technicians without surgeon supervision, or obtaining invalid informed consent.</p>
+            <p>{a}</p>
           </div>
         </div>
+'''
 
-        <div class="faq-item">
-          <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">2. Can I sue a Turkish hair clinic from the UK, US, or EU without flying back?</h4>
-            <span class="faq-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </span>
-          </div>
-          <div class="faq-a">
-            <p>Yes, you can. Your nationality and residence abroad do not strip you of your legal rights under Turkish consumer and tort law. The lawsuit is filed in the Turkish courts—usually in the city where the surgery took place, such as Istanbul or Antalya. Our specialized legal team represents international patients daily, managing the entire pre-action strategy, mediation, and litigation process on your behalf so you do not have to travel back and forth to Türkiye.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">3. Do I need to attend court hearings in Türkiye?</h4>
-            <span class="faq-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </span>
-          </div>
-          <div class="faq-a">
-            <p>No, your physical presence in Türkiye is not required. By visiting your local Turkish consulate or embassy and granting our law firm a specific Power of Attorney (Vekaletname), you authorize us to act as your legal representatives. We will attend all mandatory mediation sessions, file court documents, manage interactions with forensic experts, and represent you at all judicial hearings while you remain at home.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">4. What compensation can I claim after a botched hair transplant?</h4>
-            <span class="faq-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </span>
-          </div>
-          <div class="faq-a">
-            <p>You can claim both pecuniary (material) damages and non-pecuniary (moral) damages. Material damages may cover the refund of the original surgery package, travel costs, lost wages, and importantly, the cost of having a corrective/revision hair transplant performed by a specialist in your home country. Moral damages are awarded to compensate for the emotional distress, loss of self-esteem, social anxiety, and psychological trauma caused by a botched appearance or permanent donor depletion.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">5. How long do I have to file a malpractice lawsuit (statute of limitations)?</h4>
-            <span class="faq-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </span>
-          </div>
-          <div class="faq-a">
-            <p>In Türkiye, because an aesthetic hair transplant is governed by the "Contract for Work" framework, the standard statute of limitations is five (5) years from the date of the surgery. If the injury was caused by gross negligence or intentional fraud—such as an unlicensed person operating under the guise of being a doctor—the period can extend to twenty (20) years. However, you must act promptly, as evidence such as WhatsApp chats, medical records, and clinic operations can disappear quickly.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">6. My donor area was overharvested and looks 'moth-eaten.' Can this support a claim?</h4>
-            <span class="faq-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </span>
-          </div>
-          <div class="faq-a">
-            <p>Yes, absolutely. The donor area (typically the back and sides of the head) contains a finite number of hair follicles. A competent surgeon must calculate extraction limits safely. Overharvesting depletes this permanent resource, leaving the area looking patchy, scarred, or 'moth-eaten,' while also destroying your ability to have future corrective transplants. This is a severe deviation from the standard of care and forms a very strong basis for a medical malpractice and breach of contract claim.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">7. I have an unnatural hairline and wrong graft angles. Is this malpractice or just an aesthetic preference?</h4>
-            <span class="faq-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </span>
-          </div>
-          <div class="faq-a">
-            <p>While minor aesthetic dissatisfaction is subjective, an objectively unnatural hairline—such as a perfectly straight "pluggy" line, grafts placed pointing in the wrong direction, or implantation too low on the forehead—is a clear failure to meet professional medical standards. Turkish forensic experts evaluate whether the result aligns with standard medical practice. Under the Contract for Work doctrine, failing to deliver a reasonably natural aesthetic result as promised constitutes a breach of duty.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">8. The clinic promised 4,000+ grafts but the result looks sparse. Can I claim graft count fraud?</h4>
-            <span class="faq-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </span>
-          </div>
-          <div class="faq-a">
-            <p>Yes. Inflating graft numbers is a common tactic used by unethical "hair mills" to justify package prices. If a clinic promised to extract and implant 4,000 grafts but only performed 2,000, or if they extracted 4,000 but failed to implant them properly (resulting in massive graft death/wastage), this is both a breach of contract and potential fraud. Independent medical experts can assess the density and survival rate to prove that the promised work was not delivered.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">9. A technician performed my entire surgery, not the advertised doctor. What is their liability?</h4>
-            <span class="faq-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </span>
-          </div>
-          <div class="faq-a">
-            <p>Under Turkish Ministry of Health regulations, surgical procedures must be performed by or under the direct, active supervision of a licensed medical doctor. If your entire extraction and implantation were performed solely by unlicensed technicians or nurses while the doctor was absent, this constitutes gross negligence and a severe violation of medical law. Both the clinic and the technicians are strictly liable for the resulting harm, and this greatly strengthens your claim for maximum compensation.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">10. The clinic only gave me a consent form in Turkish right before the procedure. Is this legal?</h4>
-            <span class="faq-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </span>
-          </div>
-          <div class="faq-a">
-            <p>No, this is highly illegal and a major violation of patient rights in Türkiye. Informed consent must be given in a language you fully understand, well in advance of the surgery, and it must explicitly detail the risks (e.g., shock loss, necrosis, survival rates). Forcing you to sign Turkish documents moments before local anesthesia renders the consent legally void. This makes the clinic strictly liable for any complications, as the intervention was performed without lawful permission.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">11. What evidence do I need to prove my hair transplant malpractice case?</h4>
-            <span class="faq-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </span>
-          </div>
-          <div class="faq-a">
-            <p>Critical evidence includes your pre-operative and post-operative photographs (showing the progression of the bad result), all WhatsApp communications with the clinic or agency (especially promises regarding graft counts and doctor involvement), payment receipts, the consent forms you signed, and your medical file. We also highly recommend obtaining a medical report from a hair transplant specialist in your home country documenting the poor density, incorrect angles, or donor depletion.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">12. The clinic has blocked me on WhatsApp and refuses to provide my medical records. What should I do?</h4>
-            <span class="faq-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </span>
-          </div>
-          <div class="faq-a">
-            <p>This is a common tactic used by rogue clinics to avoid accountability. Under Turkish health regulations, the clinic is legally mandated to provide your complete medical file upon request. As your legal representatives, we will issue a formal, legally binding demand for your records via a Notary Public. If they continue to refuse, we will petition the Turkish courts and the Ministry of Health to forcefully seize the documents.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">13. How do Turkish courts and forensic experts evaluate hair transplant negligence?</h4>
-            <span class="faq-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </span>
-          </div>
-          <div class="faq-a">
-            <p>Judges in Türkiye are legal experts, not doctors, so they refer medical malpractice cases to an official medical board—usually the Turkish Forensic Medicine Institute (Adli Tıp Kurumu) or a panel of university plastic surgery or dermatology professors. This panel reviews your photos, medical records, and expert opinions to determine if the clinic's actions fell below the accepted standard of care and caused your specific injuries.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">14. How long do malpractice lawsuits typically take in Türkiye?</h4>
-            <span class="faq-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </span>
-          </div>
-          <div class="faq-a">
-            <p>A fully litigated malpractice case in a Turkish Consumer Court generally takes between 1.5 to 3 years to reach a final verdict, primarily due to the time required to obtain official forensic medical reports. However, many cases are resolved much faster—often within a few months—during the mandatory mediation phase, where clinics and their insurers agree to a private financial settlement to avoid a lengthy public trial.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">15. The clinic is offering me a free repair session to fix the botched transplant. Should I accept?</h4>
-            <span class="faq-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </span>
-          </div>
-          <div class="faq-a">
-            <p>We strongly advise extreme caution. If a clinic lacked the competence to perform the initial transplant correctly, trusting them with a highly complex revision surgery—especially when your donor area is already compromised—is incredibly risky. Furthermore, accepting their offer or signing a "release document" in exchange for the free surgery will likely waive your legal right to sue them for financial compensation later.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">16. I developed a severe infection or necrosis after my transplant. Is the clinic responsible?</h4>
-            <span class="faq-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </span>
-          </div>
-          <div class="faq-a">
-            <p>Yes. While minor localized infections can occasionally occur, severe infections, rampant cysts, or tissue death (necrosis) in the donor or recipient areas usually indicate unsanitary operating conditions, unsterile instruments, or dangerously poor surgical technique (such as injecting too much adrenaline with local anesthesia, which chokes off blood supply). The clinic is strictly liable for the catastrophic damage and the subsequent medical treatments you require.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">17. Do I need to translate my foreign medical records into Turkish?</h4>
-            <span class="faq-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </span>
-          </div>
-          <div class="faq-a">
-            <p>Yes. For documents, medical reports, and invoices from your home country to be legally admissible in a Turkish court, they must be translated into Turkish by a certified sworn translator and officially notarized. Our law firm handles this entire translation and notarization process for you, ensuring that all your foreign evidence is submitted correctly according to Turkish procedural law.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">18. Can I claim the cost of having my revision/repair transplant done in my home country?</h4>
-            <span class="faq-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </span>
-          </div>
-          <div class="faq-a">
-            <p>Yes, this is a central component of a strong compensation claim. Turkish courts recognize that a patient severely traumatized by a negligent Turkish clinic cannot be expected to return to that same country for corrective surgery. You are legally entitled to claim the estimated financial cost of having the revision procedure performed by a qualified specialist in your home country (e.g., the UK or US), which significantly increases the value of your material damages.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">19. What is mandatory mediation (arabuluculuk) in Turkish consumer law?</h4>
-            <span class="faq-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </span>
-          </div>
-          <div class="faq-a">
-            <p>Before a medical malpractice lawsuit can proceed in a Consumer Court, Turkish law mandates a mediation phase (Arabuluculuk). An impartial mediator facilitates a meeting between our legal team and the clinic's representatives or insurers. This is a strategic opportunity for us to present your overwhelming evidence and negotiate a rapid financial settlement. If an agreement is reached, the case closes swiftly; if not, we immediately file the lawsuit.</p>
-          </div>
-        </div>
-
-        <div class="faq-item">
-          <div class="faq-q" onclick="this.parentElement.classList.toggle('open')">
-            <h4 style="font-size: 0.95rem; font-weight: 600; color: var(--navy);">20. How do I start the legal process with Medical Law Türkiye?</h4>
-            <span class="faq-icon">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <line x1="12" y1="5" x2="12" y2="19" />
-                <line x1="5" y1="12" x2="19" y2="12" />
-              </svg>
-            </span>
-          </div>
-          <div class="faq-a">
-            <p>The first step is to contact us via our secure contact form, WhatsApp (+90 531 933 63 16), or email. We will ask you for a brief summary of your hair transplant, the complications you are facing, and your before-and-after photographs. Our expert attorneys will conduct a free, strictly confidential initial assessment of your case. If we take your case, we will guide you step-by-step on how to issue a Power of Attorney so we can begin fighting for your rights.</p>
-          </div>
-        </div>
-
+TAIL = """
       </div>
     </div>
   </section>
@@ -1465,3 +831,11 @@
   <script src="specialization-form.js"></script>
 </body>
 </html>
+"""
+
+final_html = HEAD_START + CSS_BLOCK + JSON_LD + BODY_START + FAQ_HTML + TAIL
+
+with open('hair-transplant-malpractice.html', 'w', encoding='utf-8') as f:
+    f.write(final_html)
+
+print("Generated hair-transplant-malpractice.html successfully.")
