@@ -9,19 +9,22 @@ document.addEventListener("DOMContentLoaded", function () {
   const submitBtn = document.querySelector(".specialization-submit-btn");
   const procedureInput = document.querySelector('input[name="procedure"]');
 
-  if (ctaTitle) ctaTitle.textContent = "Request a Legal Assessment for " + pageName;
+  // Keep titles short so mobile header/CTA layout does not overflow
+  if (ctaTitle) {
+    ctaTitle.innerHTML = "Get a Confidential<br>Legal Assessment";
+  }
   if (ctaCopy) {
     ctaCopy.textContent =
       "Share the details of your " +
       pageName +
       " experience in Türkiye. Our team reviews these claims confidentially and responds within business hours.";
   }
-  if (formHeading) formHeading.textContent = "Start Your " + pageName + " Case Review";
+  if (formHeading) formHeading.textContent = "Request a Legal Assessment";
   if (formCopy) {
     formCopy.textContent =
-      "Use the form below to request a confidential review related to " + pageName + ".";
+      "All inquiries are confidential and protected by attorney-client privilege.";
   }
-  if (submitBtn) submitBtn.textContent = "Request " + pageName + " Review";
+  if (submitBtn) submitBtn.textContent = "Send Assessment Request";
   if (procedureInput) procedureInput.value = pageName;
 
   document.querySelectorAll(".custom-contact-form").forEach(function (form) {

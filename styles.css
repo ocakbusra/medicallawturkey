@@ -86,6 +86,10 @@ nav.scrolled {
   max-width: 1200px; margin: 0 auto; padding: 0 2rem;
   height: 64px;
   display: flex; justify-content: space-between; align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+  gap: 0.75rem;
 }
 /* ── LOGO: Slater Gordon Inspired ── */
 .logo {
@@ -189,13 +193,19 @@ nav.scrolled {
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(0, 0.9fr) minmax(420px, 1.1fr);
+  /* minmax(0, …) prevents mobile horizontal overflow from fixed min column widths */
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
   gap: 3.5rem;
   align-items: center;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
 }
 .hero-content {
   position: relative;
   max-width: 560px;
+  min-width: 0;
+  width: 100%;
 }
 .hero-kicker {
   display: inline-block;
@@ -418,7 +428,13 @@ nav.scrolled {
    SECTIONS — Base
    ================================================================ */
 section { padding: 6rem 2rem; }
-.section-inner { max-width: 1200px; margin: 0 auto; }
+.section-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+  min-width: 0;
+}
 .section-eyebrow {
   font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
   text-transform: uppercase; color: var(--teal); margin-bottom: 0.6rem;
@@ -808,7 +824,14 @@ a.eeat-badge:hover {
    ================================================================ */
 #contact { background: var(--off-white); }
 .contact-grid {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 3rem;
+  display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 3rem;
+  min-width: 0;
+  width: 100%;
+}
+.contact-left,
+.contact-form {
+  min-width: 0;
+  max-width: 100%;
 }
 .contact-left h2 {
   font-family: 'Open Sans', sans-serif;
@@ -1674,9 +1697,46 @@ footer {
   }
   .nav-links.active a { font-size: 0.95rem; padding: 0.5rem 0; }
   
-  .hero h1 { font-size: 2rem; }
-  .hero-inner { padding: 5.25rem 1.25rem 4rem; }
-  .hero-sub { font-size: 0.95rem; }
+  .hero h1 { font-size: 2rem !important; line-height: 1.15; overflow-wrap: anywhere; }
+  .hero-inner {
+    padding: 5.25rem 1.25rem 4rem;
+    grid-template-columns: minmax(0, 1fr) !important;
+    width: 100%;
+    max-width: 100%;
+  }
+  .hero-sub {
+    font-size: 0.95rem;
+    max-width: 100% !important;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+    overflow-wrap: break-word;
+  }
+  .hero-content { max-width: 100%; padding: 0 0.15rem; }
+  /* Ensure article/content columns never force horizontal scroll */
+  #content .section-inner,
+  #faq .section-inner,
+  #contact .section-inner {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+  .alp-article,
+  .alp-toc,
+  .alp-body,
+  .alp-takeaways,
+  .contact-form {
+    max-width: 100%;
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+  .contact-left h2,
+  .specialization-cta-title {
+    font-size: 1.55rem !important;
+    overflow-wrap: break-word;
+    word-break: break-word;
+  }
+  .footer-nav { column-count: 1; }
+  .footer-top { grid-template-columns: 1fr; }
+  footer { padding-left: 1.25rem; padding-right: 1.25rem; }
   .hero-actions { flex-direction: column; }
   .hero-signals { grid-template-columns: 1fr; }
   .hero-plus-stage {
