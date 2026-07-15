@@ -207,6 +207,54 @@ nav.scrolled {
   min-width: 0;
   width: 100%;
 }
+
+/* ================================================================
+   SUB-PAGE HERO — centered (specialization / practice-area pages)
+   ================================================================ */
+.hero.subpage-hero {
+  min-height: 0 !important;
+  padding-top: 8rem;
+  padding-bottom: 2.5rem;
+  align-items: flex-start;
+  justify-content: center;
+}
+.hero.subpage-hero .hero-inner {
+  grid-template-columns: minmax(0, 1fr) !important;
+  text-align: center;
+  gap: 1rem;
+  padding-top: 2rem;
+  padding-bottom: 1rem;
+  justify-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 1240px;
+  margin-left: auto;
+  margin-right: auto;
+}
+.hero.subpage-hero .hero-content {
+  max-width: 760px;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+.hero.subpage-hero h1 {
+  text-align: center;
+  width: 100%;
+}
+.hero.subpage-hero .hero-sub {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  max-width: 700px;
+  text-align: center;
+}
+.hero.subpage-hero .hero-actions {
+  justify-content: center;
+  width: 100%;
+}
 .hero-kicker {
   display: inline-block;
   font-size: 0.78rem;
