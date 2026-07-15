@@ -332,20 +332,6 @@
     </svg>
   </a>
 
-  <!-- ── COOKIE BANNER ── -->
-  <div id="cookieBanner" class="cookie-banner">
-    <div class="cookie-inner">
-      <div class="cookie-text">
-        <strong>Cookie Notice</strong>
-        <p>We use essential and analytics cookies to improve your experience. See our Cookie Policy for details.</p>
-      </div>
-      <div class="cookie-actions">
-        <button onclick="acceptCookies('rejected')" class="cookie-btn-reject" id="cookieReject">Reject All</button>
-        <button onclick="acceptCookies('all')" class="cookie-btn-accept" id="cookieAccept">Accept All</button>
-      </div>
-    </div>
-  </div>
-
   <!-- ── SUCCESS MODAL ── -->
   <div class="modal-overlay" id="successModal">
     <div class="modal-content">
@@ -558,19 +544,6 @@
       document.getElementById('successModal').classList.remove('active');
       document.body.style.overflow = '';
     }
-
-    // ── COOKIES ──
-    function acceptCookies(type) {
-      localStorage.setItem('cookieConsent', type);
-      document.getElementById('cookieBanner').classList.remove('active');
-    }
-    window.addEventListener('DOMContentLoaded', () => {
-      if (!localStorage.getItem('cookieConsent')) {
-        setTimeout(() => {
-          document.getElementById('cookieBanner').classList.add('active');
-        }, 1500);
-      }
-    });
 
     // ── SCROLL ANIMATIONS (Intersection Observer) ──
     const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };

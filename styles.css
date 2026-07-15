@@ -1010,39 +1010,6 @@ footer {
 }
 
 /* ================================================================
-   COOKIE BANNER
-   ================================================================ */
-.cookie-banner {
-  position: fixed; bottom: -100%; left: 0; right: 0; z-index: 200;
-  background: var(--navy); border-top: 1px solid rgba(14,116,144,0.2);
-  padding: 1rem 2rem; box-shadow: 0 -4px 24px rgba(0,0,0,0.15);
-  transition: bottom 0.5s var(--transition);
-}
-.cookie-banner.active { bottom: 0; }
-.cookie-inner {
-  max-width: 1200px; margin: 0 auto;
-  display: flex; align-items: center; gap: 2rem; flex-wrap: wrap;
-}
-.cookie-text { flex: 1; min-width: 280px; }
-.cookie-text strong { color: white; font-size: 0.88rem; }
-.cookie-text p {
-  color: rgba(255,255,255,0.5); font-size: 0.78rem;
-  margin: 0.2rem 0 0; line-height: 1.5;
-}
-.cookie-actions { display: flex; gap: 0.5rem; flex-shrink: 0; }
-.cookie-btn-reject, .cookie-btn-accept {
-  padding: 0.55rem 1rem; font-family: 'Open Sans', sans-serif;
-  font-size: 0.8rem; cursor: pointer; border: none;
-}
-.cookie-btn-reject {
-  background: transparent; color: white;
-  border: 1px solid rgba(255,255,255,0.2); font-weight: 500;
-}
-.cookie-btn-accept {
-  background: var(--teal); color: white; font-weight: 600;
-}
-
-/* ================================================================
    SUCCESS MODAL
    ================================================================ */
 .modal-overlay {
@@ -1793,7 +1760,7 @@ footer {
    PRINT
    ================================================================ */
 @media print {
-  nav, .floating-whatsapp, .cookie-banner, .modal-overlay { display: none !important; }
+  nav, .floating-whatsapp, .modal-overlay { display: none !important; }
   body { font-size: 12pt; color: black; }
   section { page-break-inside: avoid; }
 }
