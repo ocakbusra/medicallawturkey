@@ -190,28 +190,28 @@
       background: var(--gray-50);
       border-left: 4px solid var(--navy);
       border-radius: 0 var(--radius-md) var(--radius-md) 0;
-      padding: 2rem;
+      padding: 1.75rem 2rem;
       margin: 2.5rem 0;
       position: relative;
     }
     .alp-highlight-icon {
-      position: absolute;
-      top: -14px;
-      left: 20px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: none; /* floating badge removed — looked decorative without meaning */
+    }
+    .alp-highlight-label {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.5rem;
     }
     .alp-highlight-title {
       font-size: 1.3rem;
       color: var(--navy);
-      margin: 0.5rem 0 1rem 0;
+      margin: 0 0 1rem 0;
       font-weight: 700;
+      line-height: 1.3;
     }
 
     /* -- COMPLICATION CARDS -- */
@@ -438,9 +438,10 @@
     .alp-warning-box {
       display: flex;
       align-items: flex-start;
-      gap: 0.85rem;
+      gap: 0.9rem;
       background: #FFFBEB;
       border: 1px solid #FDE68A;
+      border-left: 4px solid #D97706;
       border-radius: var(--radius-md);
       padding: 1.25rem 1.5rem;
       margin-bottom: 1.5rem;
@@ -448,7 +449,30 @@
       color: #92400E;
       line-height: 1.6;
     }
-    .alp-warning-box svg { flex-shrink: 0; margin-top: 2px; }
+    .alp-warning-box .alp-warning-icon {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #FEF3C7;
+      border: 1px solid #FCD34D;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .alp-warning-box .alp-warning-icon svg {
+      display: block;
+    }
+    .alp-takeaways-header .alp-takeaways-icon {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: rgba(14, 116, 144, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     /* -- END CTA -- */
     .alp-end-cta {
@@ -606,46 +630,47 @@
   }
   </script>
 
-<body class="page-specialization">
-  <!-- -- HEADER / NAV -- -->
-  <header class="site-header">
-    <div class="header-inner">
-      <a href="index.html" class="logo-link">
-        <img src="images/logo.png" alt="Medical Law Türkiye Logo" class="logo-img">
+<body>
+
+  <!-- -- NAV -- -->
+  <nav id="mainNav" class="scrolled">
+    <div class="nav-inner">
+      <a href="index.html" class="logo" aria-label="Medical Law Türkiye Home">
+        <div class="logo-cross">
+          <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+            <line x1="14" y1="2" x2="14" y2="26" stroke="#0E7490" stroke-width="4" stroke-linecap="square" />
+            <line x1="2" y1="14" x2="26" y2="14" stroke="#0E7490" stroke-width="4" stroke-linecap="square" />
+          </svg>
+        </div>
         <div class="logo-text">
-          <span class="logo-title">Medical Law Türkiye</span>
-          <span class="logo-subtitle">Expert Malpractice Attorneys</span>
+          <span class="logo-main">Medical<br>Law</span>
+          <span class="logo-sub">Turkey</span>
         </div>
       </a>
-      <button class="mobile-menu-toggle" aria-label="Toggle navigation">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="3" y1="12" x2="21" y2="12"></line>
-          <line x1="3" y1="6" x2="21" y2="6"></line>
-          <line x1="3" y1="18" x2="21" y2="18"></line>
-        </svg>
-      </button>
-      <nav class="main-nav">
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="about.html">About Us</a></li>
-          <li><a href="specializations.html" class="active">Specializations</a></li>
-          <li><a href="results.html">Case Results</a></li>
-          <li><a href="index.html#contact" class="nav-cta">Free Consultation</a></li>
-        </ul>
-      </nav>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="index.html#about">About Us</a></li>
+        <li><a href="specializations.html">Our Specializations</a></li>
+        <li><a href="casestudies.html">Case Studies</a></li>
+        <li><a href="articles.html">Articles</a></li>
+        <li><a href="glossary.html">Glossary</a></li>
+        <li><a href="index.html#contact">Contact</a></li>
+      </ul>
+      <a href="index.html#contact" class="nav-cta" id="navCtaBtn">Case Review</a>
     </div>
-  </header>
+  </nav>
 
   <!-- -- SUB-PAGE HERO -- -->
-  <section class="sub-hero">
-    <div class="sub-hero-inner">
-      <div class="sub-hero-content">
-        <span class="sub-hero-eyebrow">Practice Area</span>
-        <h1 class="sub-hero-title">Hair Transplant Malpractice</h1>
-        <p class="sub-hero-desc">
+  <section class="hero" style="min-height: auto; padding-bottom: 2rem; padding-top: 8rem; align-items: flex-start;">
+    <div class="hero-inner" style="grid-template-columns: 1fr; text-align: center; gap: 1rem; padding-top: 2rem;">
+      <div class="hero-content" style="display: flex; flex-direction: column; align-items: center;">
+        <div class="section-eyebrow">Practice Area</div>
+        <h1 style="font-size: 3rem; margin-bottom: 1rem;">Hair Transplant Malpractice</h1>
+        <p class="hero-sub" style="margin-left: auto; margin-right: auto; max-width: 700px; margin-bottom: 2rem;">
           Expert legal representation for international patients facing botched hair transplants, overharvested donor areas, and deceptive clinic practices in Türkiye. We fight for your rights and compensation while you remain in your home country.
         </p>
-        <a href="#contactFormCard" class="sub-hero-btn">Request Free Case Assessment</a>
+        <div class="hero-actions" style="justify-content: center;">
+          <a href="#contactFormCard" class="btn-assess">Request Free Case Assessment</a>
+        </div>
       </div>
     </div>
   </section>
@@ -679,7 +704,12 @@
         <!-- -- KEY TAKEAWAYS BOX -- -->
         <div class="alp-takeaways">
           <div class="alp-takeaways-header">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <span class="alp-takeaways-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 11l3 3L22 4"/>
+                <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+              </svg>
+            </span>
             <h3>Key Takeaways</h3>
           </div>
           <ul class="alp-takeaway-list">
@@ -716,9 +746,7 @@
 
         <!-- -- DEFINITION BOX -- -->
         <div class="alp-highlight-box" id="alp-what-is">
-          <div class="alp-highlight-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
-          </div>
+          <div class="alp-highlight-label">Definition</div>
           <h3 class="alp-highlight-title">What is Hair Transplant Malpractice?</h3>
           <p class="alp-body" style="margin-bottom: 1rem;">
             Hair transplant malpractice occurs when a clinic, surgeon, or medical tourism provider deviates from universally accepted medical standards, directly causing harm or failing to deliver the promised aesthetic outcome. It is vital to distinguish between the natural limitations of biology (such as the expected "shock loss" phase, gradual growth timelines, or minor density variances) and true medical negligence.
@@ -983,7 +1011,12 @@
         <h2 class="alp-section-title" id="alp-statute">Statute of Limitations</h2>
 
         <div class="alp-warning-box">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span class="alp-warning-icon" aria-hidden="true" title="Deadline">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M12 7v5l3 2"/>
+            </svg>
+          </span>
           <div>
             <strong>You must act promptly.</strong> The standard statute of limitations is <strong>5 years</strong> from the surgery date. For gross negligence or fraud (such as ghost surgery), it extends up to <strong>20 years</strong>.
           </div>
@@ -1413,42 +1446,91 @@
 </section>
 
   <!-- -- FOOTER -- -->
-  <footer class="site-footer">
+  <footer>
     <div class="footer-inner">
-      <div class="footer-grid">
-        <div class="footer-col brand-col">
-          <img src="images/logo-white.png" alt="Medical Law Türkiye Logo" class="footer-logo">
-          <p class="footer-desc">
-            The premier malpractice law firm in Türkiye, dedicated exclusively to international patients harmed by cosmetic negligence.
-          </p>
+      <div class="footer-top">
+        <div class="footer-brand">
+          <div class="footer-logo-wrap">
+            <div class="footer-cross">
+              <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
+                <line x1="14" y1="2" x2="14" y2="26" stroke="#0891B2" stroke-width="4" stroke-linecap="square" />
+                <line x1="2" y1="14" x2="26" y2="14" stroke="#0891B2" stroke-width="4" stroke-linecap="square" />
+              </svg>
+            </div>
+            <div class="footer-logo-text">
+              <span class="footer-logo-main">Medical Law</span>
+              <span class="footer-logo-sub">Turkey</span>
+            </div>
+          </div>
+          <p>Expert legal representation for international patients experiencing complications after cosmetic surgery in
+            Türkiye.</p>
+          <div class="footer-social" style="margin-top: 1.5rem; display: flex; gap: 1rem;">
+            <a href="https://www.facebook.com/medicallawturkey/" target="_blank" rel="noopener" aria-label="Facebook" style="color: white; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); transition: background 0.3s ease;">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M22.675 0h-21.35C.597 0 0 .597 0 1.325v21.351C0 23.403.597 24 1.325 24H12.82v-9.294H9.692v-3.622h3.128V8.413c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12V24h6.116c.73 0 1.323-.597 1.323-1.325V1.325C24 .597 23.403 0 22.675 0z"/></svg>
+            </a>
+            <a href="https://www.tiktok.com/@medicallawturkey" target="_blank" rel="noopener" aria-label="TikTok" style="color: white; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); transition: background 0.3s ease;">
+              <svg width="20" height="20" fill="currentColor" viewBox="0 0 448 512"><path d="M448 209.9a210.1 210.1 0 0 1 -122.8-39.3V349.4A162.6 162.6 0 1 1 185 188.3V278.2a74.6 74.6 0 1 0 52.2 71.2V0l88 0a121.2 121.2 0 0 0 1.9 22.2h0A122.2 122.2 0 0 0 381 102.4a121.4 121.4 0 0 0 67 20.1z"/></svg>
+            </a>
+          </div>
         </div>
-        <div class="footer-col">
-          <h4>Specializations</h4>
-          <ul class="footer-links">
-            <li><a href="bbl-malpractice.html">BBL Malpractice</a></li>
-            <li><a href="rhinoplasty-malpractice.html">Rhinoplasty Malpractice</a></li>
-            <li><a href="hair-transplant-malpractice.html">Hair Transplant Malpractice</a></li>
-            <li><a href="arm-lift-malpractice.html">Arm Lift Malpractice</a></li>
-            <li><a href="gastric-sleeve-malpractice.html">Gastric Sleeve Malpractice</a></li>
-            <li><a href="specializations.html">View All</a></li>
-          </ul>
+        <div class="footer-nav">
+          <h4>Our Specializations</h4>
+          <a href="arm-lift-malpractice.html">Arm Lift Malpractice</a>
+          <a href="bbl-malpractice.html">BBL Malpractice</a>
+          <a href="breast-augmentation-malpractice.html">Breast Augmentation Malpractice</a>
+          <a href="breast-lift-malpractice.html">Breast Lift Malpractice</a>
+          <a href="breast-reduction-malpractice.html">Breast Reduction Malpractice</a>
+          <a href="dental-treatments-malpractice.html">Dental Treatments Malpractice</a>
+          <a href="ear-lift-malpractice.html">Ear Lift Malpractice</a>
+          <a href="eye-treatments.html">Eye Treatments</a>
+          <a href="eyelid-lift-malpractice.html">Eyelid Lift Malpractice</a>
+          <a href="french-sling-malpractice.html">French Sling Malpractice</a>
+          <a href="gynecomastia-malpractice.html">Gynecomastia Malpractice</a>
+          <a href="hair-transplant-malpractice.html">Hair Transplant Malpractice</a>
+          <a href="hollywood-smile-malpractice.html">Hollywood Smile Malpractice</a>
+          <a href="in-vitro-fertilization-malpractice.html">In Vitro Fertilization (IVF) Malpractice</a>
+          <a href="leg-lift-malpractice.html">Leg Lift Malpractice</a>
+          <a href="liposuction-malpractice.html">Liposuction Malpractice</a>
+          <a href="non-surgical-malpractice.html">Non-surgical Malpractice</a>
+          <a href="rhinoplasty-malpractice.html">Rhinoplasty Malpractice</a>
         </div>
-        <div class="footer-col">
-          <h4>Contact</h4>
-          <ul class="footer-contact-info">
-            <li><strong>WhatsApp:</strong> <a href="https://wa.me/905319336316" style="color: inherit; text-decoration: none;">+90 531 933 63 16</a></li>
-            <li><strong>Email:</strong> <a href="mailto:info@medicallawturkey.com" style="color: inherit; text-decoration: none;">info@medicallawturkey.com</a></li>
-          </ul>
+        <div class="footer-legal">
+          <h4>Legal</h4>
+          <a href="privacy-policy.html">Privacy Policy</a>
+          <a href="kvkk-gdpr-notice.html">KVKK/GDPR Notice</a>
+          <a href="cookie-policy.html">Cookie Policy</a>
+          <a href="terms-of-use.html">Terms of Use</a>
+          <a href="glossary.html">Legal Glossary</a>
         </div>
       </div>
       <div class="footer-bottom">
-        <p>&copy; 2024 Medical Law Türkiye. All rights reserved.</p>
+        <p>Att. Başak Çavuşoğulları &amp; Att. Büşra Ocak</p>
         <p class="footer-disclaimer">
-          The information on this website is for general informational purposes only and does not constitute legal advice. Past results do not guarantee future outcomes.
+          This website provides general legal information only. No attorney-client relationship is created until a
+          formal engagement agreement is signed.
+          This site complies with the professional advertising rules of the <a href="https://www.barobirlik.org.tr/en" target="_blank" rel="nofollow noopener" style="color:inherit;text-decoration:underline;">Union of Turkish Bar Associations (TBB)</a>.
+          Past results do not guarantee future outcomes.
         </p>
+        <p>&copy; 2026 Medical Law Türkiye. All rights reserved.</p>
       </div>
     </div>
   </footer>
+
+
+<!--Start of Tawk.to Script-->
+<script type="text/javascript">
+var Tawk_API=Tawk_API||{}, Tawk_LoadStart=new Date();
+(function(){
+var s1=document.createElement("script"),s0=document.getElementsByTagName("script")[0];
+s1.async=true;
+s1.src='https://embed.tawk.to/69eb7dc31deef61c331ad765/default';
+s1.charset='UTF-8';
+s1.setAttribute('crossorigin','*');
+s0.parentNode.insertBefore(s1,s0);
+})();
+</script>
+<!--End of Tawk.to Script-->
+
 
   <!-- -- FLOATING WHATSAPP -- -->
   <a href="https://wa.me/905319336316" class="floating-whatsapp" id="floatingWhatsapp" target="_blank" rel="noopener"
@@ -1461,7 +1543,6 @@
     </svg>
   </a>
 
-  <!-- Scripts -->
-  <script src="specialization-form.js"></script>
 </body>
 </html>
+

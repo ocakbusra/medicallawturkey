@@ -440,28 +440,28 @@
       background: var(--gray-50);
       border-left: 4px solid var(--navy);
       border-radius: 0 var(--radius-md) var(--radius-md) 0;
-      padding: 2rem;
+      padding: 1.75rem 2rem;
       margin: 2.5rem 0;
       position: relative;
     }
     .alp-highlight-icon {
-      position: absolute;
-      top: -14px;
-      left: 20px;
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: none; /* floating badge removed — looked decorative without meaning */
+    }
+    .alp-highlight-label {
+      display: inline-block;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--teal);
+      margin-bottom: 0.5rem;
     }
     .alp-highlight-title {
       font-size: 1.3rem;
       color: var(--navy);
-      margin: 0.5rem 0 1rem 0;
+      margin: 0 0 1rem 0;
       font-weight: 700;
+      line-height: 1.3;
     }
 
     /* -- COMPLICATION CARDS -- */
@@ -688,9 +688,10 @@
     .alp-warning-box {
       display: flex;
       align-items: flex-start;
-      gap: 0.85rem;
+      gap: 0.9rem;
       background: #FFFBEB;
       border: 1px solid #FDE68A;
+      border-left: 4px solid #D97706;
       border-radius: var(--radius-md);
       padding: 1.25rem 1.5rem;
       margin-bottom: 1.5rem;
@@ -698,7 +699,30 @@
       color: #92400E;
       line-height: 1.6;
     }
-    .alp-warning-box svg { flex-shrink: 0; margin-top: 2px; }
+    .alp-warning-box .alp-warning-icon {
+      flex-shrink: 0;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: #FEF3C7;
+      border: 1px solid #FCD34D;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .alp-warning-box .alp-warning-icon svg {
+      display: block;
+    }
+    .alp-takeaways-header .alp-takeaways-icon {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: rgba(14, 116, 144, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
 
     /* -- END CTA -- */
     .alp-end-cta {
@@ -816,7 +840,7 @@
 
 
   <!-- -- SUB-PAGE HERO -- -->
-  <section class="hero" style="min-height: 50vh; padding-bottom: 2rem; padding-top: 8rem; align-items: flex-start;">
+  <section class="hero" style="min-height: auto; padding-bottom: 2rem; padding-top: 8rem; align-items: flex-start;">
     <div class="hero-inner" style="grid-template-columns: 1fr; text-align: center; gap: 1rem; padding-top: 2rem;">
       <div class="hero-content" style="display: flex; flex-direction: column; align-items: center;">
         <div class="section-eyebrow">Practice Area</div>
@@ -861,7 +885,12 @@
         <!-- -- KEY TAKEAWAYS BOX -- -->
         <div class="alp-takeaways">
           <div class="alp-takeaways-header">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+            <span class="alp-takeaways-icon" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--teal)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 11l3 3L22 4"/>
+                <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/>
+              </svg>
+            </span>
             <h3>Key Takeaways</h3>
           </div>
           <ul class="alp-takeaway-list">
@@ -898,9 +927,7 @@
 
         <!-- -- DEFINITION BOX -- -->
         <div class="alp-highlight-box" id="alp-what-is">
-          <div class="alp-highlight-icon">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--navy)" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
-          </div>
+          <div class="alp-highlight-label">Definition</div>
           <h3 class="alp-highlight-title">What is BBL (Brazilian Butt Lift) Malpractice?</h3>
           <p class="alp-body" style="margin-bottom: 1rem;">
             BBL malpractice arises when a surgeon, clinic staff, hospital, or intermediary agency deviates from the accepted standard of care and that deviation causes you harm. It is essential to separate <strong>inherent surgical risk</strong>, for example, partial fat resorption or temporary swelling, from <strong>negligence</strong>: unsafe injection planes, unsterile conditions, unlicensed operators, invalid consent, reckless volume or technique choices, or post-operative abandonment.
@@ -1188,7 +1215,12 @@
         <h2 class="alp-section-title" id="alp-statute">Understanding the Statute of Limitations</h2>
 
         <div class="alp-warning-box">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#b45309" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          <span class="alp-warning-icon" aria-hidden="true" title="Deadline">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#B45309" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M12 7v5l3 2"/>
+            </svg>
+          </span>
           <div>
             <strong>Time is of the essence.</strong> The standard statute of limitations is generally <strong>5 years</strong> from the date of the surgery. For gross negligence or fraud, it may extend to <strong>20 years</strong>.
           </div>
