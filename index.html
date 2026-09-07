@@ -203,7 +203,7 @@
     "url": "https://www.medicallawturkey.com/"
   }
   </script>
-  <script src="specialization-form.js?v=20260907-forms1" defer></script>
+  <script src="specialization-form.js?v=20260907-thanks1" defer></script>
 </head>
 
 <body>
@@ -1028,21 +1028,6 @@
     </svg>
   </a>
 
-  <!-- ── SUCCESS MODAL ── -->
-  <div class="modal-overlay" id="successModal" role="dialog" aria-modal="true" aria-labelledby="successModalTitle">
-    <div class="modal-content">
-      <div class="modal-icon">
-        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
-          <polyline points="22 4 12 14.01 9 11.01" />
-        </svg>
-      </div>
-      <h3 id="successModalTitle">Assessment Request Sent</h3>
-      <p>Thank you for reaching out. Our legal team will review your case and respond within 24 business hours.</p>
-      <button onclick="closeModal()" class="btn-assess">Close</button>
-    </div>
-  </div>
-
   <script>
     // ── NAV SCROLL EFFECT ──
     const nav = document.getElementById('mainNav');
@@ -1148,26 +1133,6 @@
       });
     });
 
-    // ── MODAL ──
-    function showModal() {
-      document.getElementById('successModal').classList.add('active');
-      document.body.style.overflow = 'hidden';
-      document.querySelector('#successModal button').focus();
-    }
-    function closeModal() {
-      document.getElementById('successModal').classList.remove('active');
-      document.body.style.overflow = '';
-      document.querySelector('.check-box').focus();
-    }
-
-    document.getElementById('successModal').addEventListener('keydown', (event) => {
-      if (event.key === 'Escape') closeModal();
-      if (event.key === 'Tab') {
-        event.preventDefault();
-        document.querySelector('#successModal button').focus();
-      }
-    });
-
     // ── SCROLL ANIMATIONS (Intersection Observer) ──
     const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -50px 0px' };
     const observer = new IntersectionObserver((entries) => {
@@ -1206,7 +1171,6 @@
         box.setAttribute('aria-checked', 'false');
       });
       updateChecklistProgress();
-      showModal();
     });
   </script>
 

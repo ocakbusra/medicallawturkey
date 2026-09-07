@@ -29,7 +29,10 @@ def canonical_for(page: Path) -> str:
 
 def rebuild() -> int:
     prior = existing_lastmods()
-    pages = sorted(ROOT.glob("*.html"), key=lambda path: (path.name != "index.html", path.name))
+    pages = sorted(
+        (page for page in ROOT.glob("*.html") if page.name != "thank-you.html"),
+        key=lambda path: (path.name != "index.html", path.name),
+    )
     ET.register_namespace("", NS)
     root = ET.Element(f"{{{NS}}}urlset")
     for page in pages:

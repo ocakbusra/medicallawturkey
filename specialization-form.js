@@ -11,8 +11,18 @@
 
       const button = form.querySelector('.btn-submit');
       const status = form.querySelector('.form-msg');
+      const idleButtonText = button.textContent;
       const controls = Array.from(form.querySelectorAll('input:not([type="hidden"]), textarea, select'));
       let submitting = false;
+
+      window.addEventListener('pageshow', function (event) {
+        if (!event.persisted) return;
+        submitting = false;
+        button.disabled = false;
+        button.textContent = idleButtonText;
+        form.removeAttribute('aria-busy');
+        status.textContent = '';
+      });
 
       function phoneNumber() {
         const number = (form.elements.namedItem("phone")?.value || "").trim();
@@ -89,6 +99,7 @@
 
         const controller = new AbortController();
         const timeout = window.setTimeout(function () { controller.abort(); }, 20000);
+        let accepted = false;
         try {
           const response = await fetch(endpoint, { method: "POST", body: data, signal: controller.signal });
           const result = await response.json();
@@ -97,24 +108,51 @@
             return;
           }
 
+          accepted = true;
+          const firstName = String(data.get('firstname') || data.get('name') || '')
+            .trim().split(/\s+/)[0].slice(0, 80);
+          try {
+            sessionStorage.setItem('mlt:assessment-confirmation', JSON.stringify({
+              firstName: firstName,
+              receivedAt: Date.now()
+            }));
+          } catch (_) { /* Confirmation still works when browser storage is unavailable. */ }
+
           form.reset();
           controls.forEach(function (control) { control.setCustomValidity(""); });
           showStatus("Thank you. Your assessment request has been sent successfully.", false);
           form.dispatchEvent(new CustomEvent("mlt:form-success", { bubbles: true }));
+          button.textContent = 'Request sent';
+          let redirected = false;
+          const redirect = function () {
+            if (redirected) return;
+            redirected = true;
+            window.location.assign(new URL('thank-you.html#received', window.location.href).href);
+          };
+          // Continue even when analytics is blocked or its callback never runs.
+          window.setTimeout(redirect, 800);
           // Send only the form category to analytics, never enquiry details or contact information.
           try {
-            if (typeof window.gtag === "function") window.gtag("event", "generate_lead", { form_type: formType });
-          } catch (_) { /* Analytics must not change the submission result. */ }
+            if (typeof window.gtag === "function") {
+              window.gtag("event", "generate_lead", {
+                form_type: formType,
+                event_callback: redirect,
+                event_timeout: 800
+              });
+            } else redirect();
+          } catch (_) { redirect(); }
         } catch (error) {
           showStatus(error.name === "AbortError"
             ? "Your request could not be confirmed in time. Please contact us via WhatsApp before resending."
             : "Your request could not be confirmed. Please check your connection or contact us via WhatsApp.", true);
         } finally {
           window.clearTimeout(timeout);
-          submitting = false;
-          button.disabled = false;
-          button.textContent = originalText;
-          form.removeAttribute("aria-busy");
+          if (!accepted) {
+            submitting = false;
+            button.disabled = false;
+            button.textContent = originalText;
+            form.removeAttribute("aria-busy");
+          }
         }
       });
     });

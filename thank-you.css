@@ -1,0 +1,39 @@
+.thanks-page { background: var(--off-white); }
+.thanks-page [hidden] { display: none !important; }
+.thanks-main { max-width: 1120px; margin: 0 auto; padding: 155px 32px 80px; }
+.thanks-grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 64px; align-items: start; }
+.thanks-receipt { border-top: 4px solid var(--teal); padding-top: 28px; }
+.thanks-eyebrow { color: var(--teal); font-size: .75rem; font-weight: 700; letter-spacing: .16em; text-transform: uppercase; margin-bottom: 28px; display: flex; align-items: center; gap: 10px; }
+.thanks-check { display: inline-grid; place-items: center; background: var(--teal); color: white; width: 24px; height: 24px; border-radius: 50%; font-size: 14px; letter-spacing: 0; }
+.thanks-main h1 { color: var(--navy); font-size: clamp(2rem, 4.2vw, 3.5rem); line-height: 1.1; letter-spacing: -.035em; margin: 0 0 24px; overflow-wrap: anywhere; text-wrap: balance; }
+.thanks-main p { color: var(--text-secondary); font-size: 1rem; line-height: 1.8; margin: 0 0 18px; }
+.thanks-main .thanks-lead { font-size: 1.15rem; color: var(--navy); }
+.thanks-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 18px; margin: 30px 0; }
+.thanks-actions .btn-assess { min-height: 48px; white-space: normal; text-align: center; }
+.thanks-home { display: inline-flex; align-items: center; min-height: 48px; color: var(--teal); text-decoration: underline; text-underline-offset: 4px; font-weight: 600; font-size: .95rem; }
+.thanks-main .thanks-note { border-top: 1px solid var(--border); padding-top: 18px; font-size: .83rem; color: var(--text-muted); }
+.thanks-next { background: white; border: 1px solid var(--border); padding: 30px 32px 12px; }
+.thanks-next h2 { color: var(--navy); font-size: 1.25rem; margin: 0 0 24px; }
+.thanks-steps { list-style: none; padding: 0; margin: 0; counter-reset: next-step; }
+.thanks-steps li { counter-increment: next-step; position: relative; padding: 0 0 22px 42px; margin: 0 0 22px; border-bottom: 1px solid var(--border); }
+.thanks-steps li:last-child { border: 0; margin-bottom: 0; }
+.thanks-steps li::before { content: counter(next-step, decimal-leading-zero); position: absolute; left: 0; top: 1px; font-size: .8rem; font-weight: 700; color: var(--teal); }
+.thanks-steps h3 { font-size: 1rem; color: var(--navy); line-height: 1.5; margin: 0 0 8px; }
+.thanks-steps p { font-size: .9rem; margin: 0; }
+.thanks-intro { max-width: 660px; }
+.thanks-page a:focus-visible { outline: 3px solid var(--teal); outline-offset: 4px; }
+.thanks-skip { position: fixed; top: -80px; left: 16px; z-index: 10000; background: white; color: var(--navy); padding: 12px; }
+.thanks-skip:focus { top: 12px; }
+@media (max-width: 800px) {
+  .thanks-main { padding: 120px 24px 64px; }
+  .thanks-grid { grid-template-columns: 1fr; gap: 20px; }
+  .thanks-next { padding: 26px 24px 8px; }
+}
+@media (max-width: 400px) {
+  .thanks-main { padding-left: 20px; padding-right: 20px; }
+  .thanks-actions { align-items: stretch; flex-direction: column; gap: 8px; }
+  .thanks-next { padding-left: 20px; padding-right: 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}

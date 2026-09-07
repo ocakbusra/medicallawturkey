@@ -16,11 +16,12 @@ PAYLOAD_PATH = Path(__file__).with_name("indexnow_request.json")
 
 
 def build_payload() -> dict:
-    """Return one URL for every root-level HTML page in this static site."""
+    """Return public content URLs, excluding the form confirmation page."""
     html_files = sorted(Path(__file__).parent.glob("*.html"), key=lambda path: path.name)
     urls = [
         f"{SITE_URL}/" if page.name == "index.html" else f"{SITE_URL}/{page.name}"
         for page in html_files
+        if page.name != "thank-you.html"
     ]
     return {
         "host": DOMAIN,
