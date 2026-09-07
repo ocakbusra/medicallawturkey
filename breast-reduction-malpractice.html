@@ -161,8 +161,8 @@
   </script>
 
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260901-seo2">
-  <script src="specialization-form.js" defer></script>
+  <link rel="stylesheet" href="styles.css?v=20260907-forms1">
+  <script src="specialization-form.js?v=20260907-forms1" defer></script>
   <meta property="og:site_name" content="Medical Law Türkiye">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="apple-touch-icon" href="images/logo.png">
@@ -444,26 +444,27 @@
         <h3>Request a Legal Assessment</h3>
         <p>All inquiries are confidential and protected by attorney-client privilege.</p>
 
-        <form class="custom-contact-form" data-type="contact">
+        <form class="custom-contact-form" data-type="contact" action="https://api.web3forms.com/submit" method="POST">
+            <input type="hidden" name="access_key" value="0926a3cb-6d91-4e4d-85c6-1302d58548bf">
           <input type="hidden" name="procedure" value="Breast Reduction Malpractice">
           <div class="form-row">
             <div class="form-group">
-              <label>First Name</label>
-              <input type="text" name="firstname" required>
+              <label for="lead-1-firstname">First Name</label>
+              <input type="text" name="firstname" required id="lead-1-firstname" autocomplete="given-name">
             </div>
             <div class="form-group">
-              <label>Last Name</label>
-              <input type="text" name="lastname">
+              <label for="lead-1-lastname">Last Name</label>
+              <input type="text" name="lastname" id="lead-1-lastname" autocomplete="family-name">
             </div>
           </div>
           <div class="form-group">
-            <label>Email *</label>
-            <input type="email" name="email" required>
+            <label for="lead-1-email">Email *</label>
+            <input type="email" name="email" required id="lead-1-email" autocomplete="email">
           </div>
           <div class="form-group">
-            <label>Phone Number *</label>
+            <label for="lead-1-phone">Phone Number *</label>
             <div style="display: flex; gap: 0.5rem;">
-              <select style="width: auto; flex-shrink: 0; padding: 0.75rem 0.5rem;" name="phonecode">
+              <select style="width: auto; flex-shrink: 0; padding: 0.75rem 0.5rem;" name="phonecode" id="lead-1-phonecode" aria-label="Phone country code">
                 <option value="+90">+90</option>
                 <option value="+44">+44</option>
                 <option value="+1">+1</option>
@@ -471,17 +472,17 @@
                 <option value="+33">+33</option>
                 <option value="+61">+61</option>
               </select>
-              <input type="tel" name="phone" style="flex: 1;" required>
+              <input type="tel" name="phone" style="flex: 1;" required id="lead-1-phone" autocomplete="tel">
             </div>
           </div>
           <div class="form-group">
-            <label>Brief Summary of Your Procedure</label>
-            <textarea name="message" rows="4"></textarea>
+            <label for="lead-1-message">Brief Summary of Your Procedure</label>
+            <textarea name="message" rows="4" id="lead-1-message"></textarea>
           </div>
           <button type="submit" class="btn-submit">
             Send Assessment Request
           </button>
-          <div class="form-msg" style="display:none; text-align:center; margin-top:1rem; font-size:0.85rem; font-weight:600;"></div>
+          <div class="form-msg" style=" text-align:center; margin-top:1rem; font-size:0.85rem; font-weight:600;" role="status" aria-live="polite" aria-atomic="true"></div>
         </form>
 
       </div>
