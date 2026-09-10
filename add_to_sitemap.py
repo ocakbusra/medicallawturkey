@@ -1,13 +1,11 @@
 """Rebuild sitemap.xml from canonical root-level HTML URLs."""
 
 from pathlib import Path
+import subprocess
+from datetime import date
 from xml.etree import ElementTree as ET
 
-from add_contextual_links import PAGES as CONTEXTUAL_PAGES
-
-
 SITE = "https://www.medicallawturkey.com"
-UPDATED = "2026-09-01"
 ROOT = Path(__file__).parent
 SITEMAP = ROOT / "sitemap.xml"
 NS = "http://www.sitemaps.org/schemas/sitemap/0.9"
@@ -27,6 +25,18 @@ def canonical_for(page: Path) -> str:
     return f"{SITE}/" if page.name == "index.html" else f"{SITE}/{page.name}"
 
 
+def content_lastmod(page: Path) -> str | None:
+    """Use the page's latest committed date, with sensible fallbacks."""
+    result = subprocess.run(
+        ["git", "log", "-1", "--format=%cs", "--", page.name],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    return result.stdout.strip() or None
+
+
 def rebuild() -> int:
     prior = existing_lastmods()
     pages = sorted(
@@ -39,11 +49,7 @@ def rebuild() -> int:
         canonical = canonical_for(page)
         url = ET.SubElement(root, f"{{{NS}}}url")
         ET.SubElement(url, f"{{{NS}}}loc").text = canonical
-        changed_content = page.name.startswith("glossary-") or page.name in CONTEXTUAL_PAGES or page.name in {
-            "index.html",
-            "cookie-policy.html", "kvkk-gdpr-notice.html", "privacy-policy.html", "terms-of-use.html"
-        }
-        lastmod = UPDATED if changed_content else prior.get(canonical, UPDATED)
+        lastmod = content_lastmod(page) or prior.get(canonical) or date.today().isoformat()
         ET.SubElement(url, f"{{{NS}}}lastmod").text = lastmod
     ET.indent(root, space="  ")
     SITEMAP.write_text(
