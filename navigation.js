@@ -3,6 +3,35 @@
 
   var MOBILE_NAV_MAX_WIDTH = 1023;
 
+  function initialiseContactTracking() {
+    if (document.documentElement.dataset.contactTrackingReady === 'true') return;
+    document.documentElement.dataset.contactTrackingReady = 'true';
+
+    document.addEventListener('click', function (event) {
+      var link = event.target.closest('a[href]');
+      if (!link) return;
+
+      var destination;
+      try { destination = new URL(link.href, window.location.href); }
+      catch (_) { return; }
+      if (destination.hostname !== 'wa.me' && destination.hostname !== 'api.whatsapp.com') return;
+
+      // A click shows contact intent. It is not a confirmed conversation or a qualified lead.
+      var location = link.id === 'floatingWhatsapp' ? 'floating_button'
+        : link.closest('footer') ? 'footer'
+        : link.id === 'contactWhatsapp' ? 'contact_section'
+        : 'page_content';
+      try {
+        if (typeof window.gtag === 'function') {
+          window.gtag('event', 'whatsapp_click', {
+            contact_channel: 'whatsapp',
+            link_location: location
+          });
+        }
+      } catch (_) { /* Never prevent the contact link from opening. */ }
+    });
+  }
+
   function initialiseNavigation() {
     var nav = document.getElementById('mainNav');
     var hamburger = document.getElementById('hamburgerBtn');
@@ -75,8 +104,12 @@
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initialiseNavigation, { once: true });
+    document.addEventListener('DOMContentLoaded', function () {
+      initialiseNavigation();
+      initialiseContactTracking();
+    }, { once: true });
   } else {
     initialiseNavigation();
+    initialiseContactTracking();
   }
 })();
