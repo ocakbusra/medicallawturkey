@@ -81,6 +81,16 @@
 
         const data = new FormData(form);
         const formType = form.dataset.type || "contact";
+        function trackSubmissionError(reason) {
+          try {
+            if (typeof window.gtag === "function") {
+              window.gtag("event", "form_submission_error", {
+                form_type: formType,
+                error_type: reason
+              });
+            }
+          } catch (_) { /* Analytics must never affect the form. */ }
+        }
         data.set("subject", formType === "checklist" ? "Self-assessment request" : "Assessment Request - " + pageName);
         data.set("from_name", "Medical Law Türkiye Website");
         data.set("page_url", window.location.origin + window.location.pathname);
@@ -104,6 +114,7 @@
           const response = await fetch(endpoint, { method: "POST", body: data, signal: controller.signal });
           const result = await response.json();
           if (!response.ok || result.success !== true) {
+            trackSubmissionError("provider_rejected");
             showStatus("We couldn't send your request. Please try again or contact us via WhatsApp.", true);
             return;
           }
@@ -142,6 +153,7 @@
             } else redirect();
           } catch (_) { redirect(); }
         } catch (error) {
+          trackSubmissionError(error.name === "AbortError" ? "timeout_unconfirmed" : "network_or_response_error");
           showStatus(error.name === "AbortError"
             ? "Your request could not be confirmed in time. Please contact us via WhatsApp before resending."
             : "Your request could not be confirmed. Please check your connection or contact us via WhatsApp.", true);
