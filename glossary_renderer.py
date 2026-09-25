@@ -137,6 +137,13 @@ def esc(value: str) -> str:
     return html.escape(value, quote=True)
 
 
+def page_title(term: str) -> str:
+    title = f"{term} in Turkish Medical Law | Medical Law Türkiye"
+    if len(title) >= 70:
+        return f"{term} | Medical Law Türkiye"
+    return title
+
+
 def pick(slug: str, section: str, options: list[str]) -> str:
     """Choose stable copy variants without relying on Python's randomised hash."""
     digest = hashlib.sha256(f"{slug}:{section}".encode("utf-8")).digest()
@@ -381,6 +388,7 @@ def render_page(item: dict, terms_by_slug: dict[str, dict]) -> str:
     sources = source_markup(source_keys)
     schema = build_schema(item, slug, description, source_keys)
     form = build_form(term)
+    title = page_title(term)
 
     return f"""<!DOCTYPE html>
 <html lang="en">
@@ -390,7 +398,7 @@ def render_page(item: dict, terms_by_slug: dict[str, dict]) -> str:
   <script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','G-L2R09RPPTV');</script>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{esc(term)} in Turkish Medical Law | Medical Law Türkiye</title>
+  <title>{esc(title)}</title>
   <meta name="description" content="{esc(description)}">
   <meta name="author" content="Başak Çavuşoğulları">
   <meta name="robots" content="index, follow, max-snippet:-1, max-image-preview:large, max-video-preview:-1">
