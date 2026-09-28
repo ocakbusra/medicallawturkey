@@ -82,11 +82,22 @@ def validate() -> list[str]:
     for page in pages:
         parser = PageParser()
         try:
-            parser.feed(page.read_text(encoding="utf-8"))
+            source = page.read_text(encoding="utf-8")
+            parser.feed(source)
         except (OSError, UnicodeError) as error:
             errors.append(f"{page.name}: could not read HTML: {error}")
             continue
         parsed_pages[page] = parser
+
+        google_loaders = [
+            attrs.get("src")
+            for tag, attrs in parser.tags
+            if tag == "script" and "googletagmanager.com/gtag/js" in (attrs.get("src") or "")
+        ]
+        if len(google_loaders) != 1:
+            errors.append(f"{page.name}: expected one Google tag loader, found {len(google_loaders)}")
+        if source.count("AW-18437766591')") != 1:
+            errors.append(f"{page.name}: expected one Google Ads configuration")
 
         canonicals = [
             attrs.get("href")
