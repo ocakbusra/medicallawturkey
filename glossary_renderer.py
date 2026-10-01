@@ -3,14 +3,15 @@
 from __future__ import annotations
 
 import html
-import hashlib
 import json
 import re
 from pathlib import Path
 
+from glossary_questions import QUESTIONS
+
 SITE = "https://www.medicallawturkey.com"
-UPDATED_ISO = "2026-09-01"
-UPDATED_LABEL = "1 September 2026"
+UPDATED_ISO = "2026-10-01"
+UPDATED_LABEL = "1 October 2026"
 
 SOURCES = {
     "tbk": {
@@ -54,9 +55,9 @@ SOURCES = {
         "url": "https://www.atk.gov.tr/",
     },
     "tourism": {
-        "title": "International Health Tourism Regulation",
+        "title": "International Health Tourism and Tourist Health Regulation (26 April 2025)",
         "publisher": "Republic of Türkiye Ministry of Health",
-        "url": "https://turkogludh.saglik.gov.tr/TR-461253/uluslararasi-saglik-turizmi-yonetmeligi.html",
+        "url": "https://shgmturizmdb.saglik.gov.tr/EN-108974/regulation-on-international-health-tourism-and-tourist-health.html",
     },
     "kvkk": {
         "title": "Personal Data Protection Law No. 6698",
@@ -108,24 +109,6 @@ CATEGORY_SOURCES = {
     "data": ["kvkk", "patient_rights", "tourism"],
 }
 
-CATEGORY_CONTEXT = {
-    "framework": "Because {term} crosses institutional and legal boundaries, the first reliable step is classification. Provider status, facility type and the patient's route into treatment determine which official rules should be read together. This prevents a broad health-law label from hiding the specific right, duty or remedy that actually needs attention.",
-    "liability": "For {term}, breach, responsibility, causation and loss should be kept as separate propositions. A persuasive review explains which person or organisation owed which duty, identifies the conduct in question, and then connects that conduct to the particular harm through records and appropriate expertise.",
-    "consent": "A consent analysis concerning {term} is a process review. It examines understandable information, capacity, voluntariness, timing and documentation. The patient's language, urgency and individual circumstances may be important, so a signature should never be used as a substitute for the underlying conversation.",
-    "procedure": "Procedure can determine whether a legally sound point about {term} is heard at all. Parties, forum, authority, deadline and pre-action requirements must be identified from current official rules. Early chronology work also protects evidence and prevents inconsistent accounts later.",
-    "damages": "A damages review involving {term} begins with proof and causation, not a promised figure. Past and future losses are separated, supporting assumptions are stated, and payments from employers, insurers or public bodies are recorded so that the calculation can be tested.",
-    "clinical": "Clinical review of {term} should be anchored to the information available at the time. The relevant specialty, procedure, patient risk and response to changing symptoms matter. A later bad outcome can prompt investigation, but it does not replace an evidence-based comparison with the professional standard.",
-    "tourism": "Cross-border treatment adds actors and documents to {term}: the healthcare provider, any intermediary, travel arrangements, translations, advertising and international payment flows. Mapping each promise and payment to the correct legal entity is essential before choosing a remedy.",
-    "evidence": "A report associated with {term} is only as useful as its mandate, inputs and reasoning. The issuing body's authority, the specialties involved, the questions asked and the complete record supplied should all be visible. Conclusions should then be compared with the issue the court or decision-maker must resolve.",
-    "consumer": "Whether {term} engages consumer procedure depends on the parties and transaction. The provider's commercial identity, payment recipient, service promise and public or private status should be confirmed before selecting a forum or treating mediation as mandatory.",
-    "criminal": "Criminal assessment of {term} uses offence elements and criminal procedure, not the civil standard for compensation. Original evidence must be preserved and factual language used carefully because investigation, expert review and charging decisions belong to the competent authorities.",
-    "product": "Product analysis of {term} separates the device itself from selection, storage, implantation, instructions and follow-up. Traceability is critical: without the exact model, lot or serial information, it may be difficult to test a recall, warning, defect or supply-chain theory.",
-    "insurance": "Insurance questions around {term} require the policy and governing rules, not assumptions about available funds. Coverage, insured status, notification, defence and liability are distinct. Public-benefit or recourse questions may also sit outside the patient's own damages claim.",
-    "contract": "Contract analysis of {term} starts with the actual undertaking. Written terms, advertisements, professional duties and mandatory protections are read together, then compared with performance. The label attached to an aesthetic or therapeutic service cannot decide the legal classification by itself.",
-    "rights": "Patient-rights review of {term} connects the event to a current official provision, the responsible institution and an available complaint or legal route. Respect for autonomy, dignity and accessible communication should remain visible throughout the evidence rather than appearing only as general slogans.",
-    "data": "Data review of {term} maps the controller, health-information categories, purpose, legal basis, recipients, retention and any international transfer. The privacy route should be kept distinct from clinical negligence while preserving evidence relevant to both.",
-}
-
 
 def slugify(value: str) -> str:
     value = value.lower().replace("ı", "i")
@@ -144,136 +127,6 @@ def page_title(term: str) -> str:
     return title
 
 
-def pick(slug: str, section: str, options: list[str]) -> str:
-    """Choose stable copy variants without relying on Python's randomised hash."""
-    digest = hashlib.sha256(f"{slug}:{section}".encode("utf-8")).digest()
-    return options[int.from_bytes(digest[:4], "big") % len(options)]
-
-
-def page_specific_copy(item: dict, slug: str, related_titles: list[str]) -> dict[str, str]:
-    term = item["term"]
-    lower = term.lower()
-    evidence = item["evidence"]
-
-    bridge = pick(slug, "bridge", [
-        "A useful first review therefore asks who did what, when it happened and which part of the record can verify it.",
-        "The practical task is to convert that definition into a dated account of the treatment, the responsible actors and the outcome under review.",
-        "That distinction matters because a label alone cannot identify the provider, prove the disputed conduct or connect it to a loss.",
-        "In practice, the term becomes legally meaningful only after the treatment pathway and the documents supporting each step have been identified.",
-        "A careful assessment keeps the legal concept separate from the patient's understandable concern, then tests both against the same chronology.",
-        "The starting point is not an assumption about liability but a structured comparison between the allegation, the contemporaneous record and the applicable rule.",
-        "For an international patient, this also means confirming the legal identity of every clinic, practitioner and intermediary involved in the treatment journey.",
-        "The definition should guide evidence collection, not predetermine the result; disputed facts still need records, context and appropriate expertise.",
-        "Its role is to frame the right question for review while leaving room for the medical evidence and current Turkish rules to determine the answer.",
-        "A reliable analysis narrows the concept to the particular procedure, promise, decision or omission shown by the patient's own documents.",
-    ])
-
-    official_bridge = pick(slug, "official", [
-        "The three official references cited below provide the verification path for this page. They must be read in their current form and then matched to the provider and facts.",
-        "Primary materials, rather than summaries by commercial publishers, should anchor the legal analysis. Their relevance still depends on the treatment setting and remedy pursued.",
-        "The applicable source may change with the facility, party or legal route. The cited authorities are therefore a starting set for fact-specific research, not a substitute for it.",
-        "Current legislation and official institutional material should be checked before relying on a procedural or substantive proposition. The links below permit that direct check.",
-        "Official text is especially important where translations or online summaries compress legal qualifications. Each cited rule must still be applied to the evidence in the individual matter.",
-        "A sound opinion traces each legal proposition back to an authority responsible for the rule or procedure. This page uses only that kind of primary or institutional source.",
-        "The legal framework is not selected by keyword alone. Provider status, contractual chain and requested remedy decide how the cited official materials interact.",
-        "Direct consultation of official publications reduces the risk of relying on outdated commentary. Dates, amendments and the scope of each rule remain part of the review.",
-        "The sources below come directly from public authorities or the recognised professional body relevant to the issue, allowing the current wording to be checked at source.",
-        "Verification should move from the patient's chronology to the current official rule and back to the supporting record. The cited links are provided for that purpose.",
-    ])
-
-    evidence_intro = pick(slug, "evidence", [
-        "The checklist below targets the records most likely to clarify this issue. Collecting them does not mean that a viable claim has already been established.",
-        "An efficient first review begins with the material capable of confirming dates, decisions and responsible parties. The following items deserve early attention.",
-        "Evidence should answer the legal question, not merely increase the volume of the file. These four items create a focused starting bundle.",
-        "Where accounts differ, contemporaneous records can narrow the dispute. Preserve the following material in its original form wherever possible.",
-        "A structured file allows the medical and legal questions to be tested separately. Start with these records before reconstructing events from memory.",
-        "The value of a document depends on its date, source and completeness. The following evidence categories usually help establish those features.",
-        "Before drawing conclusions, build a small auditable record of the event. These items are selected for their connection to this particular concept.",
-        "The first evidence pass should reveal both what is known and what remains missing. Use the following list to organise that pass.",
-        "Original files, full message threads and identifiable issuers are preferable to cropped screenshots or later summaries. Prioritise the material below.",
-        "A lawyer or independent expert can review the matter more accurately when the key propositions are paired with the following dated evidence.",
-    ])
-
-    international_one = pick(slug, "international-one", [
-        "If the patient has returned home, begin by preserving {e0} and {e1}. Keep the original-language versions, original digital files and any later translation as separate items so their source remains clear.",
-        "Cross-border review is easier when {e0} is collected alongside {e1}. Record the clinic's full legal name, the payment recipient and every intermediary instead of relying only on a brand shown in advertising.",
-        "Before messages or portals disappear, export {e0} and secure {e1}. A translation can assist the review, but it should not replace the original Turkish or other source document.",
-        "Distance does not prevent an initial assessment, but missing identifiers do. Preserve {e0}, link it to {e1}, and note which person or entity created each record.",
-        "An overseas patient should organise {e0} first, then compare it with {e1}. File names, dates and metadata should remain intact because they may later help authenticate the chronology.",
-        "For a remote instruction, a concise timeline supported by {e0} and {e1} is more useful than a long undated narrative. Identify the treating facility and payment chain at the same time.",
-        "International treatment files often split across email, messaging apps and patient portals. Consolidate {e0} with {e1} without editing or overwriting the originals.",
-        "After travel home, request missing records in writing and retain {e0} together with {e1}. Note whether a clinic, doctor or facilitator answered each request.",
-        "Remote evidence collection should preserve provenance. Keep {e0} in its native format, attach {e1} to the relevant event, and store translations as clearly labelled working copies.",
-        "The first cross-border bundle should make provider identity and timing visible. {e0} and {e1} are practical anchors for that bundle, subject to the facts of the case.",
-    ]).format(e0=evidence[0], e1=evidence[1])
-
-    international_two = pick(slug, "international-two", [
-        "Urgent medical needs should be addressed independently of any legal strategy. Before signing a refund, waiver or settlement, obtain advice about its effect on {term} and preserve {e2} plus {e3}.",
-        "Do not delay appropriate follow-up care while assembling a legal file. Once safe, add {e2} and {e3}, then ask counsel to confirm the forum, parties and any time-sensitive step.",
-        "A complaint sent too early can omit a party or fix an inaccurate chronology. Secure {e2} and {e3} first, while obtaining independent treatment whenever health requires it.",
-        "Any proposed refund document should be read before acceptance because its scope may extend beyond payment. The review should also include {e2} and {e3} in connection with {term}.",
-        "Separate recovery decisions from compensation decisions: seek suitable care, retain {e2}, preserve {e3}, and then obtain advice about the correct Turkish route.",
-        "Avoid promising a deadline or outcome in correspondence with the provider. A lawyer can use {e2} and {e3} to evaluate {term} while keeping medical priorities first.",
-        "Where continuing symptoms exist, independent clinical care comes before document strategy. The later legal review should incorporate {e2} and {e3} without assuming that either proves liability.",
-        "A remote review can identify gaps, but it cannot safely replace missing medical evidence. Preserve {e2} and {e3} before negotiating or accepting language that may affect rights.",
-        "The appropriate remedy may depend on facts not visible in advertising or a single report. Add {e2} and {e3}, protect immediate health needs and obtain individual Turkish advice.",
-        "Communications should remain factual while the evidence is incomplete. Keep {e2} and {e3}, and have any release or settlement proposal checked before it is signed.",
-    ]).format(e2=evidence[2], e3=evidence[3], term=term)
-
-    source_note = pick(slug, "source-note", [
-        "These links let readers verify the governing material at its source. Publication dates, amendments and case-specific scope should be checked again when advice is given.",
-        "The citations are supplied for direct verification. Official wording and procedure can change, so the current version remains controlling for a later assessment.",
-        "Each reference comes from a Turkish public authority or recognised professional body. Its current text and factual relevance should be confirmed before use.",
-        "Use the linked publications to test the statements above against the source itself. An official link does not remove the need for fact-specific interpretation.",
-        "The list is deliberately limited to primary and official institutional material. Current amendments and the competence of the issuing body remain important.",
-        "Readers can follow these citations without passing through a commercial summary. Check the live publication and the date relevant to the treatment.",
-        "Official materials support verification, but they do not decide disputed facts. The record and the legal route must still be analysed together.",
-        "These authorities form a focused research trail for this concept. They should be supplemented only where the facts or procedural route require another official source.",
-        "The source list is limited to direct official and institutional publications. Confirm the latest wording before relying on any rule described on this page.",
-        "Direct citations improve transparency for patients and reviewing professionals. They remain general references until applied to a specific provider, event and remedy.",
-    ])
-
-    review_intro = pick(slug, "review", [
-        "A disciplined review should connect {term} to {e0}, then test that account against {e1} before addressing responsibility or loss.",
-        "The analysis becomes easier to audit when {e0} establishes the timeline and {e1} is used to check the disputed proposition about {term}.",
-        "Begin with the event shown by {e0}; use {e1} to identify gaps, competing explanations and the expert question that actually needs an answer.",
-        "For {term}, the sequence below keeps medical safety, document provenance, party identity and the choice of legal route in the correct order.",
-        "A reliable opinion is built in stages. {e0} and {e1} should be linked to the relevant actor before a breach, causation or remedy is proposed.",
-        "Reviewing {term} requires more than a conclusion in a report. The underlying {e0} and {e1} should support the reasoning step by step.",
-        "Use {e0} to anchor what happened and {e1} to test how it was recorded. Only then should the possible legal consequences of {term} be classified.",
-        "The following order reduces avoidable errors: protect the patient, preserve {e0}, verify {e1}, identify the actors and select the competent route.",
-        "A complete file should show how {e0} relates to {e1}. That relationship helps separate a clinical concern from a legally supportable point about {term}.",
-        "The legal route should be the result of the evidence review, not its starting assumption. {e0} and {e1} provide two concrete checks on that discipline.",
-    ]).format(term=term, e0=evidence[0], e1=evidence[1])
-
-    faq_remote = pick(slug, "faq-remote", [
-        "An initial remote review is often possible using organised digital records. Representation, evidence collection, deadlines and any physical examination remain fact-dependent.",
-        "Leaving Türkiye does not by itself prevent preliminary review. The completeness of the records, the parties involved and the chosen procedure determine what can happen remotely.",
-        "Many first assessments can begin after the patient travels home. Missing source files, identity details or necessary examinations may still require additional steps.",
-        "Counsel can often identify issues and document gaps remotely. No conclusion about procedure or timing should be made until the individual treatment file is checked.",
-        "Remote instruction may be practical where original records and communications are available. Later medical or procedural requirements depend on the specific dispute.",
-        "A patient can usually send a first evidence bundle from abroad. The next step depends on health needs, provider identity, forum and the quality of the preserved record.",
-        "Distance changes logistics, not the need for reliable evidence. A preliminary review can start remotely, while formal steps are assessed separately.",
-        "Digital records can support an initial consultation from another country. Whether further examination, notarisation or representation is needed must be decided case by case.",
-        "The file can often be triaged remotely after travel. Current deadlines and evidence requirements must still be confirmed under the route relevant to the patient.",
-        "A remote review may clarify the legal and evidential questions. It cannot guarantee that every later procedural or medical step can also be completed remotely.",
-    ])
-
-    return {
-        "bridge": bridge,
-        "official_bridge": official_bridge,
-        "evidence_intro": evidence_intro,
-        "international_one": international_one,
-        "international_two": international_two,
-        "source_note": source_note,
-        "review_intro": review_intro,
-        "faq_remote": faq_remote,
-        "related_one": related_titles[0],
-        "related_two": related_titles[1],
-        "related_three": related_titles[2],
-    }
-
-
 def related_title(slug: str, terms_by_slug: dict[str, dict]) -> str:
     return terms_by_slug.get(slug, {}).get("term", slug.replace("-", " ").title())
 
@@ -290,16 +143,7 @@ def source_markup(source_keys: list[str]) -> str:
 
 
 def evidence_markup(term: str, evidence: list[str]) -> str:
-    lead_ins = [
-        "Establish the contemporaneous record with",
-        "Test the factual sequence against",
-        "Support the medical or financial proposition using",
-        "Preserve the communication and responsibility trail through",
-    ]
-    return "\n".join(
-        f"<li><strong>{esc(item.capitalize())}:</strong> {esc(lead_ins[index])} {esc(item)} so the {esc(term.lower())} issue can be assessed from dated evidence rather than recollection alone.</li>"
-        for index, item in enumerate(evidence)
-    )
+    return "\n".join(f"<li>{esc(item[0].upper() + item[1:])}</li>" for item in evidence)
 
 
 def build_form(term: str) -> str:
@@ -352,7 +196,7 @@ def build_schema(item: dict, slug: str, description: str, source_keys: list[str]
                     "url": SITE,
                     "logo": {"@type": "ImageObject", "url": f"{SITE}/images/logo.png"},
                 },
-                "image": [f"{SITE}/images/glossary/{slug}-{number}.webp" for number in range(1, 4)],
+                "image": [f"{SITE}/images/glossary/{slug}-{number}.webp" for number in range(1, 3)],
                 "citation": [SOURCES[key]["url"] for key in source_keys],
             },
             {
@@ -375,15 +219,15 @@ def render_page(item: dict, terms_by_slug: dict[str, dict]) -> str:
     canonical = f"{SITE}/glossary-{slug}.html"
     description = f"Understand {term} ({tr}) in Turkish medical law: what it means, evidence to preserve, official sources and practical review steps."
     source_keys = list(CATEGORY_SOURCES[item["category"]])
+    if term == "Statute of Limitations":
+        source_keys = ["tbk", "consumer", "patient_rights"]
     if term == "Off-Label Drug Use":
         source_keys[1] = "medicine"
-    context = CATEGORY_CONTEXT[item["category"]].format(term=term)
-    related_titles = [related_title(related_slug, terms_by_slug) for related_slug in item["related"]]
     related = "\n".join(
         f'<a href="glossary-{esc(related_slug)}.html">{esc(related_title(related_slug, terms_by_slug))}</a>'
         for related_slug in item["related"]
     )
-    copy = page_specific_copy(item, slug, related_titles)
+    question, answer = QUESTIONS[term]
     evidence = evidence_markup(term, item["evidence"])
     sources = source_markup(source_keys)
     schema = build_schema(item, slug, description, source_keys)
@@ -439,7 +283,7 @@ def render_page(item: dict, terms_by_slug: dict[str, dict]) -> str:
           <h1>{esc(term)}</h1>
           <p class="glossary-turkish-term">Turkish: {esc(tr)}</p>
           <p class="glossary-hero-definition">{esc(item['definition'])}</p>
-          <div class="glossary-author-line"><span>Written by <a href="/#att-basak-cavusogullari">Att. Başak Çavuşoğulları</a></span><span>Reviewed {UPDATED_LABEL}</span></div>
+          <div class="glossary-author-line"><span>Written by <a href="/#att-basak-cavusogullari">Att. Başak Çavuşoğulları</a></span><span>Updated {UPDATED_LABEL}</span></div>
         </div>
 {form}
       </div>
@@ -449,61 +293,28 @@ def render_page(item: dict, terms_by_slug: dict[str, dict]) -> str:
       <div class="section-inner glossary-article-inner">
         <section>
           <h2>What {esc(term)} means in a Turkish medical case</h2>
-          <p>{esc(item['definition'])} {esc(copy['bridge'])}</p>
           <p>{esc(item['question'])}</p>
           <p>{esc(item['nuance'])}</p>
         </section>
 
         <figure class="glossary-figure glossary-figure-wide">
           <img src="images/glossary/{slug}-1.webp" alt="Professional case review illustrating {esc(term.lower())} in Turkish medical law" width="1200" height="675" loading="eager" fetchpriority="high">
-          <figcaption>A document-led review keeps {esc(term.lower())} tied to the patient's real chronology.</figcaption>
         </figure>
-
-        <section>
-          <h2>The legal framework to check</h2>
-          <p>{esc(context)}</p>
-          <p>{esc(copy['official_bridge'])}</p>
-        </section>
 
         <section class="glossary-evidence-section">
           <div>
             <h2>Evidence that usually deserves early attention</h2>
-            <p>{esc(copy['evidence_intro'])}</p>
+<p>Keep the relevant records in their original form, with dates and the issuing provider identified. This checklist helps organise an initial review.</p>
             <ul class="glossary-evidence-list">{evidence}</ul>
           </div>
           <figure class="glossary-figure">
             <img src="images/glossary/{slug}-2.webp" alt="Records and evidence relevant to {esc(term.lower())}" width="1200" height="675" loading="lazy">
-            <figcaption>Original, dated records are more reliable than reconstructed summaries.</figcaption>
           </figure>
-        </section>
-
-        <section>
-          <h2>How an international patient can prepare</h2>
-          <p>{esc(copy['international_one'])}</p>
-          <p>{esc(copy['international_two'])}</p>
-        </section>
-
-        <section class="glossary-review-panel">
-          <figure class="glossary-figure">
-            <img src="images/glossary/{slug}-3.webp" alt="Independent legal review concerning {esc(term.lower())}" width="1200" height="675" loading="lazy">
-            <figcaption>Legal review should separate clinical facts, official rules, causation and loss.</figcaption>
-          </figure>
-          <div>
-            <h2>A careful review sequence</h2>
-            <p>{esc(copy['review_intro'])}</p>
-            <ol>
-              <li><strong>Protect health first.</strong> Seek appropriate independent treatment when symptoms or complications require attention.</li>
-              <li><strong>Preserve the source record.</strong> Keep original files, metadata, invoices and messages relevant to {esc(term.lower())}.</li>
-              <li><strong>Identify every actor.</strong> Separate the surgeon, facility, intermediary, insurer and payment recipient.</li>
-              <li><strong>Apply the current official rule.</strong> Match each factual proposition to a primary source and appropriate expert evidence.</li>
-              <li><strong>Choose the correct route.</strong> Confirm forum, parties, pre-action steps and deadlines before filing or settling.</li>
-            </ol>
-          </div>
         </section>
 
         <section class="official-sources" aria-labelledby="officialSourcesTitle">
           <h2 id="officialSourcesTitle">Official primary sources</h2>
-          <p>{esc(copy['source_note'])}</p>
+<p>Read the official text relevant to the treatment date and legal question. These sources explain the framework; they do not determine disputed facts in an individual case.</p>
           <ul>{sources}</ul>
         </section>
 
@@ -514,9 +325,7 @@ def render_page(item: dict, terms_by_slug: dict[str, dict]) -> str:
 
         <section class="glossary-faq">
           <h2>Questions patients often ask</h2>
-          <details><summary>Does {esc(term)} automatically prove medical malpractice?</summary><p>No. {esc(item['nuance'])} The complete record and applicable Turkish rule must be reviewed before any conclusion.</p></details>
-          <details><summary>Which documents are useful for a first {esc(term.lower())} review?</summary><p>Start with {esc(', '.join(item['evidence'][:-1]))}, and {esc(item['evidence'][-1])}. Keep original files and dates wherever possible.</p></details>
-          <details><summary>Can the issue be reviewed after I leave Türkiye?</summary><p>{esc(copy['faq_remote'])}</p></details>
+          <details><summary>{esc(question)}</summary><p>{esc(answer)}</p></details>
         </section>
 
         <aside class="glossary-legal-note"><strong>Legal information, not a case outcome:</strong> This page provides general information. It does not diagnose malpractice, guarantee compensation or create an attorney-client relationship.</aside>
@@ -548,9 +357,8 @@ def render_pages(terms: list[dict], output_dir: str | Path = ".") -> list[Path]:
             flags=re.DOTALL,
         )
         article_text = html.unescape(re.sub(r"<[^>]+>", " ", article_match.group(1))) if article_match else ""
-        word_count = len(re.findall(r"\b[\w’'-]+\b", article_text))
-        if word_count < 500:
-            raise ValueError(f"glossary-{slug}.html has only {word_count} article words")
+        if not article_text.strip():
+            raise ValueError(f"glossary-{slug}.html has no article content")
         if markup.count('class="floating-whatsapp"') != 1:
             raise ValueError(f"glossary-{slug}.html must contain exactly one floating WhatsApp button")
         path = output_root / f"glossary-{slug}.html"

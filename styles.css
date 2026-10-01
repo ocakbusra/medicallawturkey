@@ -2516,3 +2516,39 @@ footer {
     grid-template-columns: 1fr;
   }
 }
+/* Patient guides keep related paragraphs together inside the page shell. */
+.content-quality-guide .guide-section,
+.ivf-content .guide-section,
+.ivf-faq .guide-section {
+  padding: 0;
+  margin: 0 0 2rem;
+}
+
+.content-quality-guide p,
+.ivf-content p {
+  margin-bottom: 1rem;
+  line-height: 1.8;
+}
+
+.content-quality-guide a,
+.ivf-content a {
+  color: var(--teal);
+  text-decoration: underline;
+}
+
+.content-quality-guide .case-source-note,
+.ivf-content .case-source-note {
+  font-size: .9rem;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+}
+
+.ivf-article {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: clamp(1.25rem, 4vw, 3rem);
+  background: var(--white);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-md);
+}
