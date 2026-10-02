@@ -10,8 +10,8 @@ from pathlib import Path
 from glossary_questions import QUESTIONS
 
 SITE = "https://www.medicallawturkey.com"
-UPDATED_ISO = "2026-10-01"
-UPDATED_LABEL = "1 October 2026"
+UPDATED_ISO = "2026-10-02"
+UPDATED_LABEL = "2 October 2026"
 
 SOURCES = {
     "tbk": {
@@ -152,6 +152,7 @@ def build_form(term: str) -> str:
           <h2 id="heroFormTitle">Request a confidential case review</h2>
           <p>Tell us briefly what happened. Submitting this form does not create an attorney-client relationship.</p>
           <form class="custom-contact-form glossary-request-form" data-type="contact" action="https://api.web3forms.com/submit" method="POST">
+            <p class="enquiry-data-note">Start with treatment location, approximate dates and a brief concern. Please do not include full medical records, intimate photographs or identity documents. Read the <a href="privacy-policy.html">Privacy Policy</a> and <a href="kvkk-gdpr-notice.html">personal-data notice</a> before sending.</p>
             <input type="hidden" name="access_key" value="0926a3cb-6d91-4e4d-85c6-1302d58548bf">
             <input type="hidden" name="procedure" value="Glossary enquiry: {esc(term)}">
             <div class="glossary-form-row">
@@ -179,7 +180,7 @@ def build_schema(item: dict, slug: str, description: str, source_keys: list[str]
             {
                 "@type": "Article",
                 "@id": f"{canonical}#article",
-                "headline": f"{item['term']} in Turkish Medical Law",
+                "headline": item["term"],
                 "description": description,
                 "dateModified": UPDATED_ISO,
                 "mainEntityOfPage": canonical,
@@ -260,7 +261,7 @@ def render_page(item: dict, terms_by_slug: dict[str, dict]) -> str:
   <meta name="twitter:image" content="{SITE}/images/glossary/{slug}-1.webp">
   <script type="application/ld+json">{schema}</script>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=20260907-forms1">
+  <link rel="stylesheet" href="styles.css?v=20261002-content2">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="apple-touch-icon" href="images/logo.png">
 </head>
@@ -344,6 +345,36 @@ def render_page(item: dict, terms_by_slug: dict[str, dict]) -> str:
 """
 
 
+def update_index(terms: list[dict], output_root: Path) -> None:
+    path = output_root / "glossary.html"
+    if not path.is_file():
+        return
+    markup = path.read_text(encoding="utf-8")
+    by_file = {f"glossary-{slugify(item['term'])}.html": item for item in terms}
+    seen: set[str] = set()
+    def update_card(match: re.Match) -> str:
+        card = match.group(0)
+        item = by_file.get(match.group(1))
+        if item is None:
+            return card
+        seen.add(match.group(1))
+        card = re.sub(r"(<h3>).*?(</h3>)", lambda m: m[1] + esc(item["term"]) + m[2], card, flags=re.DOTALL)
+        paragraphs = 0
+        def update_paragraph(m: re.Match) -> str:
+            nonlocal paragraphs
+            paragraphs += 1
+            text = "Turkish: " + item["tr"] if paragraphs == 1 else item["definition"]
+            return m[1] + esc(text) + m[2]
+        card = re.sub(r"(<p(?:\s[^>]*)?>).*?(</p>)", update_paragraph, card, flags=re.DOTALL)
+        if paragraphs != 2:
+            raise ValueError(f"Unexpected glossary card: {match.group(1)}")
+        return card
+    markup = re.sub(r'<a href="(glossary-[^"]+\.html)" class="cs-card"[^>]*>.*?</a>', update_card, markup, flags=re.DOTALL)
+    if seen != set(by_file):
+        raise ValueError("Glossary index does not cover the complete term catalogue")
+    path.write_text(markup, encoding="utf-8")
+
+
 def render_pages(terms: list[dict], output_dir: str | Path = ".") -> list[Path]:
     output_root = Path(output_dir)
     terms_by_slug = {slugify(item["term"]): item for item in terms}
@@ -364,4 +395,5 @@ def render_pages(terms: list[dict], output_dir: str | Path = ".") -> list[Path]:
         path = output_root / f"glossary-{slug}.html"
         path.write_text(markup, encoding="utf-8")
         rendered.append(path)
+    update_index(terms, output_root)
     return rendered
