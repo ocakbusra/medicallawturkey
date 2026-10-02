@@ -297,7 +297,7 @@ TERMS = [
         "term": "Interest on Damages", "tr": "Tazminata İşleyen Faiz", "category": "damages",
         "definition": "Interest on damages concerns an additional monetary consequence over time. The applicable basis, rate and start date depend on the claim, debtor, default rules and current legislation.",
         "question": "A calculation must identify the principal amount, legal character of the debt, relevant notice or event, judgment terms and any statutory rate changes.",
-        "nuance": "Publishing a fixed percentage is unsafe because rates and legal rules can change. The current official text and case-specific dates should be used.",
+        "nuance": "The applicable interest rate can change over time. Ask for a calculation using the relevant legal rule, rate changes and case-specific dates rather than assuming one fixed percentage applies throughout.",
         "evidence": ["principal-loss calculation", "notice or default documentation", "filing and judgment dates", "current official rate source and payment history"],
         "related": ["pecuniary-damages", "turkish-code-of-obligations", "breach-of-contract"],
     },

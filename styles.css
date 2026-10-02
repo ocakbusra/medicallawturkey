@@ -2516,3 +2516,49 @@ footer {
     grid-template-columns: 1fr;
   }
 }
+/* Patient guides keep related paragraphs together inside the page shell. */
+.content-quality-guide .guide-section,
+.ivf-content .guide-section,
+.ivf-faq .guide-section {
+  padding: 0;
+  margin: 0 0 2rem;
+}
+
+.content-quality-guide p,
+.ivf-content p {
+  margin-bottom: 1rem;
+  line-height: 1.8;
+}
+
+.content-quality-guide a,
+.ivf-content a {
+  color: var(--teal);
+  text-decoration: underline;
+}
+
+.content-quality-guide .case-source-note,
+.ivf-content .case-source-note {
+  font-size: .9rem;
+  color: var(--text-muted);
+  margin-bottom: 2rem;
+}
+
+.ivf-article {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: clamp(1.25rem, 4vw, 3rem);
+  background: var(--white);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--radius-md);
+}
+
+/* Information beside public enquiry forms. */
+.enquiry-data-note { font-size: .8rem; line-height: 1.55; margin: .75rem 0 1rem; color: var(--text-secondary, #52627a); }
+.enquiry-data-note a { color: var(--teal-dark, #0e7490); text-decoration: underline; }
+
+/* Keep policy sections readable within their existing page column. */
+.legal-content section { padding: 0; margin: 2rem 0; }
+.legal-content h2 { line-height: 1.4; margin-bottom: 1rem; }
+.legal-content p { margin-bottom: 1rem; }
+.legal-content li { margin-bottom: .5rem; }
