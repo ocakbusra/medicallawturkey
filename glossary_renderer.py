@@ -148,8 +148,9 @@ def evidence_markup(term: str, evidence: list[str]) -> str:
 
 def build_form(term: str) -> str:
     return f"""
-        <aside class="glossary-hero-form" aria-labelledby="heroFormTitle">
-          <h2 id="heroFormTitle">Request a confidential case review</h2>
+        <details class="glossary-hero-form" aria-labelledby="heroFormTitle">
+          <summary><h2 id="heroFormTitle">Request a confidential case review</h2></summary>
+          <div class="glossary-form-content">
           <p>Tell us briefly what happened. Submitting this form does not create an attorney-client relationship.</p>
           <form class="custom-contact-form glossary-request-form" data-type="contact" action="https://api.web3forms.com/submit" method="POST">
             <p class="enquiry-data-note">Start with treatment location, approximate dates and a brief concern. Please do not include full medical records, intimate photographs or identity documents. Read the <a href="privacy-policy.html">Privacy Policy</a> and <a href="kvkk-gdpr-notice.html">personal-data notice</a> before sending.</p>
@@ -169,7 +170,8 @@ def build_form(term: str) -> str:
             <button type="submit" class="btn-submit specialization-submit-btn">Request case review</button>
             <div class="form-msg" role="status" aria-live="polite" aria-atomic="true"></div>
           </form>
-        </aside>"""
+          </div>
+        </details>"""
 
 
 def build_schema(item: dict, slug: str, description: str, source_keys: list[str]) -> str:
@@ -264,6 +266,8 @@ def render_page(item: dict, terms_by_slug: dict[str, dict]) -> str:
   <link rel="stylesheet" href="styles.css?v=20261002-content2">
   <link rel="icon" href="favicon.ico" type="image/x-icon">
   <link rel="apple-touch-icon" href="images/logo.png">
+  <link rel="stylesheet" href="interior.css?v=20261019-layout1">
+  <script src="glossary.js?v=20261019-layout1" defer></script>
 </head>
 <body>
   <nav id="mainNav" class="scrolled">
