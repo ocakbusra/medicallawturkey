@@ -1,0 +1,142 @@
+/* Interior-page corrections. The homepage does not load this stylesheet. */
+.guide-wrap > .guide-section {
+  padding: 0;
+  margin: 0 0 2rem;
+}
+
+footer .footer-brand p,
+footer .footer-nav a,
+footer .footer-legal a,
+footer .footer-bottom p {
+  color: #b8c7d9;
+}
+
+footer .footer-nav h4,
+footer .footer-legal h4 {
+  color: #dce7f2;
+}
+
+/* The shared fine-print rule uses !important, so override it on interiors only. */
+footer .footer-bottom .footer-disclaimer {
+  color: #b8c7d9 !important;
+}
+
+footer .footer-nav a:hover,
+footer .footer-legal a:hover {
+  color: #fff;
+}
+
+/* Four footer groups need four columns instead of an otherwise empty second row. */
+@media (min-width: 901px) {
+  footer .footer-top:has(> :nth-child(4)) {
+    grid-template-columns: 1.4fr 1.2fr 1fr 1fr;
+    gap: 2rem;
+  }
+
+  footer .footer-top:has(> :nth-child(4)) .footer-nav {
+    column-count: 1;
+  }
+}
+
+.glossary-hero-form > summary {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  list-style: none;
+  cursor: pointer;
+}
+
+.glossary-hero-form > summary::-webkit-details-marker {
+  display: none;
+}
+
+.glossary-hero-form > summary::after {
+  content: "+";
+  color: var(--teal);
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.glossary-hero-form[open] > summary::after {
+  content: "−";
+}
+
+.glossary-hero-form > summary h2 {
+  margin: 0;
+}
+
+.glossary-hero-form > summary:focus-visible {
+  outline: 3px solid var(--teal);
+  outline-offset: 6px;
+  border-radius: 3px;
+}
+
+.glossary-form-content {
+  padding-top: 0.8rem;
+}
+
+.glossary-form-content > p {
+  margin: 0 0 1.3rem;
+  color: var(--text-secondary);
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+@media (max-width: 900px) {
+  .contact-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .contact-grid > *,
+  .contact-grid .form-group,
+  .contact-grid .channel-text {
+    min-width: 0;
+  }
+
+  .contact-grid .channel-text {
+    overflow-wrap: anywhere;
+  }
+
+  .glossary-hero-form {
+    max-width: 100%;
+  }
+
+  .glossary-hero-form > summary h2 {
+    font-size: 1.1rem;
+  }
+
+  .glossary-page-hero {
+    padding-bottom: 2rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .procedure-article-page #content {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+  }
+
+  .procedure-article-page #content > .section-inner {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+
+  .procedure-article-page .alp-article,
+  .procedure-article-page .alp-toc {
+    padding: 1rem !important;
+  }
+
+  .procedure-article-page .alp-takeaways,
+  .procedure-article-page .alp-highlight-box,
+  .procedure-article-page .alp-complication-card,
+  .procedure-article-page .alp-legal-card,
+  .procedure-article-page .alp-quote,
+  .procedure-article-page .alp-compensation-card,
+  .procedure-article-page .alp-warning-box,
+  .procedure-article-page .alp-inline-cta,
+  .procedure-article-page .alp-end-cta,
+  .procedure-article-page .alp-disclaimer {
+    padding: 1.1rem 1rem;
+  }
+}
