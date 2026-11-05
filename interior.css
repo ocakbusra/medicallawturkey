@@ -140,3 +140,7 @@ footer .footer-legal a:hover {
     padding: 1.1rem 1rem;
   }
 }
+
+/* Images supporting patient guides */
+.guide-illustration { margin: 1.5rem 0; }
+.guide-illustration img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 12px; }
