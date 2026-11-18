@@ -818,6 +818,13 @@ section { padding: 6rem 2rem; }
   color: white; font-weight: 700; font-size: 0.95rem;
   margin-bottom: 1.25rem;
 }
+.attorney-portrait {
+  display: block; width: 96px; height: 96px; object-fit: cover;
+  border-radius: 50%; border: 2px solid var(--border); margin-bottom: 1.25rem;
+}
+.case-article .attorney-portrait { width: 144px; height: 144px; }
+.profile-registration { font-size: 0.82rem; margin-bottom: 1rem; }
+.profile-registration a { color: var(--teal); text-decoration: underline; }
 .profile-card h3 {
   font-size: 1.05rem; font-weight: 700; color: var(--navy);
   margin-bottom: 0.2rem;
