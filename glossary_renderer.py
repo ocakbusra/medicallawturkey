@@ -10,8 +10,8 @@ from pathlib import Path
 from glossary_questions import QUESTIONS
 
 SITE = "https://www.medicallawturkey.com"
-UPDATED_ISO = "2026-10-02"
-UPDATED_LABEL = "2 October 2026"
+UPDATED_ISO = "2026-11-19"
+UPDATED_LABEL = "19 November 2026"
 
 SOURCES = {
     "tbk": {
@@ -109,6 +109,40 @@ CATEGORY_SOURCES = {
     "data": ["kvkk", "patient_rights", "tourism"],
 }
 
+PATIENT_GUIDES = {
+    "consent": ("patient-rights-and-informed-consent-in-turkey.html", "Consent forms and patient rights in Turkey"),
+    "records": ("medical-records-request-turkey-international-patients.html", "Request your medical records from a Turkish clinic"),
+    "claim": ("medical-malpractice-and-compensation-liability-in-turkey.html", "Understand the assessment of a medical malpractice claim"),
+    "review": ("prepare-remote-legal-review-turkish-cosmetic-surgery-claim.html", "Prepare a legal review from abroad"),
+    "expert": ("independent-medical-expert-review-cosmetic-surgery-turkey.html", "Prepare for an independent medical expert review"),
+    "compensation": ("how-compensation-is-assessed-turkish-medical-malpractice.html", "How compensation is assessed in a Turkish medical claim"),
+    "costs": ("corrective-treatment-costs-after-surgery-turkey.html", "Document the costs of corrective treatment at home"),
+    "deadlines": ("medical-malpractice-claim-deadlines-turkey.html", "Check what can affect your medical claim deadline"),
+    "power": ("power-of-attorney-medical-claim-turkey-abroad.html", "Arrange a power of attorney for a claim from abroad"),
+    "promises": ("preserve-clinic-ads-promises-cosmetic-surgery-turkey.html", "Preserve clinic advertising and treatment promises"),
+    "insurance": ("medical-complication-insurance-turkey-patient-guide.html", "Check insurance after a medical complication"),
+    "complications": ("cosmetic-surgery-complications-turkey-legal-rights.html", "Organise the first steps after a cosmetic surgery concern"),
+    "home_records": ("home-country-medical-records-turkish-malpractice-review.html", "Keep records of treatment received in your home country"),
+}
+
+CATEGORY_GUIDES = {
+    "framework": ("claim", "consent"),
+    "liability": ("claim", "expert"),
+    "consent": ("consent", "records"),
+    "procedure": ("deadlines", "power"),
+    "damages": ("compensation", "costs"),
+    "clinical": ("complications", "expert"),
+    "tourism": ("records", "review"),
+    "evidence": ("records", "expert"),
+    "consumer": ("claim", "promises"),
+    "criminal": ("expert", "records"),
+    "product": ("claim", "records"),
+    "insurance": ("insurance", "costs"),
+    "contract": ("claim", "promises"),
+    "rights": ("consent", "records"),
+    "data": ("records", "home_records"),
+}
+
 
 def slugify(value: str) -> str:
     value = value.lower().replace("ı", "i")
@@ -191,7 +225,7 @@ def build_schema(item: dict, slug: str, description: str, source_keys: list[str]
                     "@type": "Person",
                     "name": "Başak Çavuşoğulları",
                     "jobTitle": "Attorney at Law",
-                    "url": f"{SITE}/#att-basak-cavusogullari",
+                    "url": f"{SITE}/attorney-basak-cavusogullari.html",
                 },
                 "publisher": {
                     "@type": "Organization",
@@ -229,6 +263,10 @@ def render_page(item: dict, terms_by_slug: dict[str, dict]) -> str:
     related = "\n".join(
         f'<a href="glossary-{esc(related_slug)}.html">{esc(related_title(related_slug, terms_by_slug))}</a>'
         for related_slug in item["related"]
+    )
+    guides = "\n".join(
+        f'<a href="{esc(PATIENT_GUIDES[key][0])}">{esc(PATIENT_GUIDES[key][1])}</a>'
+        for key in CATEGORY_GUIDES[item["category"]]
     )
     question, answer = QUESTIONS[term]
     evidence = evidence_markup(term, item["evidence"])
@@ -288,7 +326,7 @@ def render_page(item: dict, terms_by_slug: dict[str, dict]) -> str:
           <h1>{esc(term)}</h1>
           <p class="glossary-turkish-term">Turkish: {esc(tr)}</p>
           <p class="glossary-hero-definition">{esc(item['definition'])}</p>
-          <div class="glossary-author-line"><span>Written by <a href="/#att-basak-cavusogullari">Att. Başak Çavuşoğulları</a></span><span>Updated {UPDATED_LABEL}</span></div>
+          <div class="glossary-author-line"><span>Written by <a href="attorney-basak-cavusogullari.html">Att. Başak Çavuşoğulları</a></span><span>Updated {UPDATED_LABEL}</span></div>
         </div>
 {form}
       </div>
@@ -326,6 +364,11 @@ def render_page(item: dict, terms_by_slug: dict[str, dict]) -> str:
         <section>
           <h2>Related glossary concepts</h2>
           <div class="glossary-related-links">{related}</div>
+        </section>
+
+        <section>
+          <h2>Related patient guides</h2>
+          <div class="glossary-related-links">{guides}</div>
         </section>
 
         <section class="glossary-faq">
