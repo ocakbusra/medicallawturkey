@@ -144,3 +144,64 @@ footer .footer-legal a:hover {
 /* Images supporting patient guides */
 .guide-illustration { margin: 1.5rem 0; }
 .guide-illustration img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 12px; }
+
+/* Consent guide: quick answers and a clear path to the supporting records. */
+.consent-guide .guide-section,
+.consent-guide #prepare-review {
+  scroll-margin-top: 6rem;
+}
+
+.consent-guide-nav {
+  padding: 1.25rem 1.5rem;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+}
+
+.consent-guide-nav ul,
+.consent-related-links,
+.consent-review-checklist {
+  padding-left: 1.25rem;
+}
+
+.consent-guide-nav li,
+.consent-related-links li,
+.consent-review-checklist li {
+  margin-top: .65rem;
+  line-height: 1.65;
+}
+
+.consent-guide .consent-review-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: .8rem 1rem;
+  border-radius: 6px;
+  background: var(--teal);
+  color: var(--white);
+  font-weight: 700;
+  line-height: 1.4;
+  text-align: center;
+  text-decoration: none;
+}
+
+.consent-guide .consent-review-link:focus-visible {
+  outline: 3px solid var(--navy);
+  outline-offset: 3px;
+}
+
+@media (max-width: 640px) {
+  .consent-guide .case-page-body {
+    padding-inline: 1rem;
+  }
+
+  .consent-guide .case-page-layout {
+    padding-inline: 0;
+    min-width: 0;
+  }
+
+  .consent-guide .case-article,
+  .consent-guide .case-sidebar {
+    min-width: 0;
+  }
+}

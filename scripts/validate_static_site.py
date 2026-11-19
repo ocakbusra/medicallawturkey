@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import sys
+from collections import deque
 from datetime import datetime
 from html.parser import HTMLParser
 from pathlib import Path
@@ -25,6 +26,8 @@ class PageParser(HTMLParser):
         self.h1_count = 0
         self.json_ld: list[str] = []
         self._inside_json_ld = False
+        self._inside_title = False
+        self.title = ""
 
     def handle_starttag(self, tag: str, attrs: list[tuple[str, str | None]]) -> None:
         values = dict(attrs)
@@ -33,15 +36,21 @@ class PageParser(HTMLParser):
             self.ids.add(str(values["id"]))
         if tag.lower() == "h1":
             self.h1_count += 1
+        if tag.lower() == "title":
+            self._inside_title = True
         if tag.lower() == "script" and values.get("type", "").lower() == "application/ld+json":
             self._inside_json_ld = True
             self.json_ld.append("")
 
     def handle_endtag(self, tag: str) -> None:
+        if tag.lower() == "title":
+            self._inside_title = False
         if tag.lower() == "script" and self._inside_json_ld:
             self._inside_json_ld = False
 
     def handle_data(self, data: str) -> None:
+        if self._inside_title:
+            self.title += data
         if self._inside_json_ld and self.json_ld:
             self.json_ld[-1] += data
 
@@ -112,6 +121,7 @@ def validate() -> list[str]:
     parsed_pages: dict[Path, PageParser] = {}
     canonical_urls: dict[Path, str] = {}
     noindex_pages: set[Path] = set()
+    title_owners: dict[str, Path] = {}
 
     for page in pages:
         parser = PageParser()
@@ -122,6 +132,17 @@ def validate() -> list[str]:
             errors.append(f"{page.name}: could not read HTML: {error}")
             continue
         parsed_pages[page] = parser
+
+        title = " ".join(parser.title.split())
+        if sum(tag == "title" for tag, _ in parser.tags) != 1 or not title:
+            errors.append(f"{page.name}: expected one non-empty title")
+        elif len(title) > 70:
+            errors.append(f"{page.name}: title exceeds 70 characters ({len(title)})")
+        title_key = title.casefold()
+        if title_key and title_key in title_owners:
+            errors.append(f"{page.name}: title duplicates {title_owners[title_key].name}")
+        elif title_key:
+            title_owners[title_key] = page
 
         google_loaders = [
             attrs.get("src")
@@ -201,6 +222,17 @@ def validate() -> list[str]:
             if not raw_url:
                 continue
 
+            absolute_url = urlsplit(raw_url)
+            if (
+                tag == "a"
+                and absolute_url.hostname in {"medicallawturkey.com", "www.medicallawturkey.com"}
+                and (
+                    absolute_url.scheme != "https"
+                    or absolute_url.hostname != "www.medicallawturkey.com"
+                )
+            ):
+                errors.append(f"{page.name}: internal URL should use canonical HTTPS host: {raw_url}")
+
             target_info = local_target(page, raw_url)
             if target_info is None:
                 continue
@@ -220,6 +252,25 @@ def validate() -> list[str]:
                         continue
                 if fragment not in target_parser.ids:
                     errors.append(f"{page.name}: local fragment does not exist: {raw_url}")
+
+    indexable_pages = set(parsed_pages) - noindex_pages
+    graph: dict[Path, set[Path]] = {page: set() for page in indexable_pages}
+    for page in indexable_pages:
+        for tag, attrs in parsed_pages[page].tags:
+            if tag != "a" or not attrs.get("href"):
+                continue
+            target_info = local_target(page, str(attrs["href"]))
+            if target_info and target_info[0] in indexable_pages:
+                graph[page].add(target_info[0])
+    home = ROOT / "index.html"
+    reachable = {home} if home in graph else set()
+    queue = deque(reachable)
+    while queue:
+        for target in graph[queue.popleft()] - reachable:
+            reachable.add(target)
+            queue.append(target)
+    for page in sorted(indexable_pages - reachable):
+        errors.append(f"{page.name}: indexable page is not reachable from the homepage through HTML links")
 
     try:
         sitemap_root = ElementTree.parse(SITEMAP).getroot()
@@ -249,7 +300,8 @@ def validate() -> list[str]:
         print(
             f"Static site validation passed: {len(pages)} HTML pages, "
             f"{len(expected_sitemap)} sitemap URLs, local links/assets/fragments, "
-            "canonical tags, H1s, JSON-LD, and WhatsApp links."
+            "unique titles (max 70 characters), homepage reachability, canonical tags, "
+            "H1s, JSON-LD, and WhatsApp links."
         )
     return errors
 
