@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import json
 import sys
+from datetime import datetime
 from html.parser import HTMLParser
 from pathlib import Path
 from urllib.parse import unquote, urljoin, urlsplit
@@ -67,6 +68,39 @@ def local_target(page: Path, raw_url: str) -> tuple[Path, str | None] | None:
         relative_path += "index.html"
     target = ROOT / relative_path
     return target, unquote(parsed.fragment) or None
+
+
+def validate_profile_page_schema(schema: object) -> list[str]:
+    """Check Google's ProfilePage field types in addition to JSON syntax."""
+    errors: list[str] = []
+    nodes = schema if isinstance(schema, list) else [schema]
+    for node in nodes:
+        if not isinstance(node, dict):
+            continue
+        if isinstance(node.get("@graph"), list):
+            errors.extend(validate_profile_page_schema(node["@graph"]))
+        types = node.get("@type", [])
+        if "ProfilePage" not in (types if isinstance(types, list) else [types]):
+            continue
+        if "mainEntityOfPage" in node:
+            errors.append("ProfilePage: mainEntityOfPage is not supported by Google")
+        for field in ("dateCreated", "dateModified"):
+            if field not in node:
+                continue
+            value = node[field]
+            try:
+                if not isinstance(value, str) or "T" not in value:
+                    raise ValueError
+                if datetime.fromisoformat(value).utcoffset() is None:
+                    raise ValueError
+            except ValueError:
+                errors.append(f"ProfilePage: {field} must include a valid time and timezone")
+        entity = node.get("mainEntity")
+        if not isinstance(entity, dict):
+            errors.append("ProfilePage: mainEntity must describe a person or organization")
+        elif "identifier" in entity and not isinstance(entity["identifier"], str):
+            errors.append("ProfilePage: mainEntity.identifier must be text for Google")
+    return errors
 
 
 def validate() -> list[str]:
@@ -147,9 +181,13 @@ def validate() -> list[str]:
 
         for index, block in enumerate(parser.json_ld, start=1):
             try:
-                json.loads(block)
+                schema = json.loads(block)
             except json.JSONDecodeError as error:
                 errors.append(f"{page.name}: JSON-LD block {index} is invalid: {error.msg}")
+                continue
+            errors.extend(
+                f"{page.name}: {error}" for error in validate_profile_page_schema(schema)
+            )
 
     for page, parser in parsed_pages.items():
         for tag, attrs in parser.tags:
